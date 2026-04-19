@@ -107,11 +107,18 @@ const UI_TEXT = {
     scanRorBtn: 'Scan Land Record (RoR/Khatiyan)',
     scanLagaanBtn: 'Scan Tax Receipt (Lagaan/Rasid)',
     guidedSubmissionBtn: '📋 Guided PM-KISAN Submission',
+    openPortalSideBySideBtn: 'Open PM-KISAN Side by Side',
     openPortalBtn: 'Open Official Portal (Manual Submit)',
     copyPrefillBtn: 'Copy Prefill Details',
     downloadPacketBtn: 'Download Application Packet',
     guidedSubmissionTitle: 'Step-by-Step PM-KISAN Application Guide',
     guidedPortalHint: 'Portal Hint:',
+    portalSplitEyebrow: 'Live Portal',
+    portalSplitTitle: 'PM-KISAN Portal',
+    portalSplitHelp: 'Use this panel to keep the portal open beside your extracted data. If the site stays blank, it is likely blocking embedding and you should use the new-tab button.',
+    portalSplitFallbackTitle: 'Portal not visible?',
+    portalSplitFallbackBody: 'Some government sites block opening inside another page. If that happens, use the new-tab button below.',
+    closePortalPanel: 'Close Panel',
     previousStep: '← Previous',
     nextStep: 'Next →',
     openPortalInNewTab: '🔗 Open PM-KISAN Portal',
@@ -209,11 +216,18 @@ const UI_TEXT = {
     scanRorBtn: 'भूमि रिकॉर्ड स्कैन करें (RoR/खतौनी)',
     scanLagaanBtn: 'टैक्स रसीद स्कैन करें (लगान/रसद)',
     guidedSubmissionBtn: '📋 निर्देशित PM-KISAN आवेदन',
+    openPortalSideBySideBtn: 'PM-KISAN साथ-साथ खोलें',
     openPortalBtn: 'सरकारी वेबसाइट खोलें (जमा खुद करें)',
     copyPrefillBtn: 'भरी हुई जानकारी नकल करें',
     downloadPacketBtn: 'आवेदन सामग्री सहेजें',
     guidedSubmissionTitle: 'PM-KISAN आवेदन के लिए चरण-दर-चरण गाइड',
     guidedPortalHint: 'पोर्टल सुझाव:',
+    portalSplitEyebrow: 'लाइव पोर्टल',
+    portalSplitTitle: 'PM-KISAN पोर्टल',
+    portalSplitHelp: 'इस पैनल में पोर्टल को आपकी भरी हुई जानकारी के साथ-साथ खुला रखें। अगर पेज खाली रहे, तो साइट एम्बेडिंग रोक रही है और आपको नई टैब वाला बटन इस्तेमाल करना चाहिए।',
+    portalSplitFallbackTitle: 'पोर्टल दिखाई नहीं दे रहा?',
+    portalSplitFallbackBody: 'कुछ सरकारी साइटें दूसरी पेज के अंदर खुलने से रोकती हैं। ऐसा हो तो नीचे दिया गया नई टैब वाला बटन इस्तेमाल करें।',
+    closePortalPanel: 'पैनल बंद करें',
     previousStep: '← पिछला',
     nextStep: 'अगला →',
     openPortalInNewTab: '🔗 PM-KISAN पोर्टल खोलें',
@@ -890,6 +904,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Guided submission button handlers
   const guidedNextBtn = document.getElementById('guidedNextBtn');
   const guidedPrevBtn = document.getElementById('guidedPrevBtn');
+  const guidedOpenSideBySideBtn = document.getElementById('guidedOpenSideBySideBtn');
   const guidedOpenPortalBtn = document.getElementById('guidedOpenPortalBtn');
   const guidedCompleteBtn = document.getElementById('guidedCompleteBtn');
   const guidedCloseBtn = document.getElementById('guidedCloseBtn');
@@ -917,6 +932,13 @@ document.addEventListener('DOMContentLoaded', function() {
       // Open PM-KISAN portal in new tab
       window.open('https://pmkisan.gov.in', '_blank');
       showNotification('Portal opened in new tab. Paste your fields and submit!', 'info');
+    });
+  }
+
+  if (guidedOpenSideBySideBtn) {
+    guidedOpenSideBySideBtn.addEventListener('click', function() {
+      openPortalSideBySide();
+      showNotification('Portal opened side by side.', 'info');
     });
   }
 
@@ -1515,26 +1537,15 @@ function showReadinessModal(checks, onProceed) {
 }
 
 async function openOfficialPortal() {
-  if (!selectedScheme || !selectedScheme.website) {
-    setAdminStatus('No official portal found for this scheme.', true);
-    return;
-  }
+  const portalUrl = getOfficialPortalUrl();
 
   // Copy all details to clipboard first
-  const text = prefillText();
-  let copied = false;
-  if (text) {
-    try {
-      await navigator.clipboard.writeText(text);
-      copied = true;
-    } catch (_) {}
-  }
+  const copied = await copyPrefillToClipboard();
 
   const checks = buildReadinessChecklist();
 
   showReadinessModal(checks, () => {
-    const win = window.open(selectedScheme.website, '_blank', 'noopener,noreferrer');
-    // Detect if the window failed to open or portal may be geo-blocked
+    window.open(portalUrl, '_blank', 'noopener,noreferrer');
     setTimeout(() => {
       setAdminStatus(
         (copied ? 'Details copied to clipboard. ' : '') +
@@ -1543,6 +1554,72 @@ async function openOfficialPortal() {
       );
     }, 800);
   });
+}
+
+const PM_KISAN_PORTAL_URL = 'https://pmkisan.gov.in';
+let portalSplitFallbackTimer = null;
+
+function getOfficialPortalUrl() {
+  return (selectedScheme && selectedScheme.website) || PM_KISAN_PORTAL_URL;
+}
+
+async function copyPrefillToClipboard() {
+  const text = prefillText();
+  if (!text) return false;
+
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
+
+function setPortalSplitVisible(isVisible) {
+  const shell = document.getElementById('workspaceShell');
+  const panel = document.getElementById('portalSplitView');
+  const frame = document.getElementById('portalSplitFrame');
+  const fallback = document.getElementById('portalSplitFallback');
+  if (!shell || !panel || !frame || !fallback) return;
+
+  shell.classList.toggle('portal-open', isVisible);
+  panel.setAttribute('aria-hidden', isVisible ? 'false' : 'true');
+
+  if (!isVisible) {
+    if (portalSplitFallbackTimer) {
+      clearTimeout(portalSplitFallbackTimer);
+      portalSplitFallbackTimer = null;
+    }
+    fallback.hidden = true;
+    frame.src = 'about:blank';
+  }
+}
+
+async function openPortalSideBySide() {
+  const portalUrl = getOfficialPortalUrl();
+  const frame = document.getElementById('portalSplitFrame');
+  const fallback = document.getElementById('portalSplitFallback');
+  if (!frame || !fallback) return;
+
+  const copied = await copyPrefillToClipboard();
+
+  fallback.hidden = true;
+  setPortalSplitVisible(true);
+  frame.src = portalUrl;
+
+  if (portalSplitFallbackTimer) clearTimeout(portalSplitFallbackTimer);
+  portalSplitFallbackTimer = setTimeout(() => {
+    fallback.hidden = false;
+  }, 4000);
+
+  setAdminStatus(
+    (copied ? 'Details copied to clipboard. ' : '') +
+    'Portal opened side by side. If it stays blank, use the new-tab button in the right panel.'
+  );
+}
+
+function closePortalSideBySide() {
+  setPortalSplitVisible(false);
 }
 
 function formatAadhaar(value) {
@@ -2515,7 +2592,22 @@ document.getElementById('copyAadhaarBtn').addEventListener('click', () => copyFi
 document.getElementById('copyIfscBtn').addEventListener('click', () => copyFieldValue('applyIfsc', 'IFSC'));
 document.getElementById('downloadPacketBtn').addEventListener('click', downloadApplicationPacket);
 document.getElementById('guidedSubmissionBtn').addEventListener('click', openGuidedSubmissionWalkthrough);
+document.getElementById('openPortalSideBySideBtn').addEventListener('click', openPortalSideBySide);
 document.getElementById('openPortalBtn').addEventListener('click', openOfficialPortal);
+document.getElementById('portalSplitOpenNewTabBtn').addEventListener('click', openOfficialPortal);
+document.getElementById('closePortalSplitBtn').addEventListener('click', closePortalSideBySide);
+
+const portalSplitFrame = document.getElementById('portalSplitFrame');
+if (portalSplitFrame) {
+  portalSplitFrame.addEventListener('load', () => {
+    const fallback = document.getElementById('portalSplitFallback');
+    if (portalSplitFallbackTimer) {
+      clearTimeout(portalSplitFallbackTimer);
+      portalSplitFallbackTimer = null;
+    }
+    if (fallback) fallback.hidden = true;
+  });
+}
 
 async function loadRejectionReasons() {
   try {

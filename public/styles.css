@@ -30,6 +30,22 @@ html[lang="hi"] textarea {
   margin: 0 auto;
   padding: 20px;
 }
+.workspace-shell {
+  display: block;
+}
+
+.workspace-shell.portal-open {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 46vw);
+  gap: 18px;
+  align-items: start;
+}
+
+.workspace-shell.portal-open .container {
+  max-width: none;
+  margin: 0;
+}
+
 .hero {
   background: linear-gradient(135deg, #0f766e, #15803d);
   color: #fff;
@@ -440,6 +456,113 @@ button:hover { background: #14532d; }
 
 .override-toggle button:hover {
   background: #115e59;
+}
+
+.portal-split-view {
+  display: none;
+  min-width: 0;
+  padding: 20px 20px 20px 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.workspace-shell.portal-open .portal-split-view {
+  display: block;
+}
+
+.portal-split-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  height: calc(100vh - 40px);
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid #cbd5e1;
+  border-radius: 18px;
+  box-shadow: 0 18px 40px rgba(15, 118, 110, 0.12);
+  padding: 18px;
+  backdrop-filter: blur(10px);
+}
+
+.portal-split-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.portal-split-eyebrow {
+  margin: 0 0 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 11px;
+  color: #0f766e;
+  font-weight: 700;
+}
+
+.portal-split-head h3 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.portal-split-close {
+  width: auto;
+  white-space: nowrap;
+}
+
+.portal-split-help,
+.portal-split-fallback p {
+  margin: 0;
+  color: #475569;
+  font-size: 14px;
+}
+
+.portal-split-fallback {
+  background: #fff7ed;
+  border: 1px solid #fdba74;
+  color: #9a3412;
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.portal-split-fallback strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.portal-split-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.portal-split-frame {
+  width: 100%;
+  flex: 1;
+  min-height: 420px;
+  border: 1px solid #d1d5db;
+  border-radius: 14px;
+  background: #f8fafc;
+}
+
+@media (max-width: 1080px) {
+  .workspace-shell.portal-open {
+    grid-template-columns: 1fr;
+  }
+
+  .portal-split-view {
+    position: static;
+    height: auto;
+    padding: 0 20px 20px;
+  }
+
+  .portal-split-card {
+    height: auto;
+  }
+
+  .portal-split-frame {
+    height: 70vh;
+    flex: none;
+  }
 }
 
 @keyframes slideInUp {

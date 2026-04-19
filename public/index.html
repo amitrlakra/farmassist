@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <div class="workspace-shell" id="workspaceShell">
   <div class="container">
     <div class="hero">
       <div class="lang-switcher">
@@ -177,6 +178,7 @@
         <button id="scanRorBtn" type="button" class="secondary" data-i18n="scanRorBtn">Scan Land Record (RoR/Khatiyan)</button>
         <button id="scanLagaanBtn" type="button" class="secondary" data-i18n="scanLagaanBtn">Scan Tax Receipt (Lagaan/Rasid)</button>
         <button id="guidedSubmissionBtn" type="button" data-i18n="guidedSubmissionBtn">📋 Guided PM-KISAN Submission</button>
+        <button id="openPortalSideBySideBtn" type="button" class="secondary" data-i18n="openPortalSideBySideBtn">Open PM-KISAN Side by Side</button>
         <button id="openPortalBtn" type="button" data-i18n="openPortalBtn">Open Official Portal (Manual Submit)</button>
         <button id="copyPrefillBtn" type="button" class="secondary" data-i18n="copyPrefillBtn">Copy Prefill Details</button>
         <button id="downloadPacketBtn" type="button" class="secondary" data-i18n="downloadPacketBtn">Download Application Packet</button>
@@ -212,7 +214,8 @@
           <button id="guidedNextBtn" type="button" class="secondary" data-i18n="nextStep" style="flex:1;">Next →</button>
         </div>
 
-        <div style="display:flex; gap:10px;">
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button id="guidedOpenSideBySideBtn" type="button" class="secondary" data-i18n="openPortalSideBySideBtn" style="flex:1; min-width:180px;">Open PM-KISAN Side by Side</button>
           <button id="guidedOpenPortalBtn" type="button" class="secondary" data-i18n="openPortalInNewTab" style="flex:1;">🔗 Open PM-KISAN Portal</button>
           <button id="guidedCompleteBtn" type="button" style="flex:1; background:#10b981; color:white; padding:10px; border:none; border-radius:6px; cursor:pointer; font-weight:bold;" data-i18n="completeSubmissionBtn">✓ Submission Complete</button>
         </div>
@@ -220,6 +223,26 @@
     </div>
 
   </div>
+  <aside id="portalSplitView" class="portal-split-view" aria-hidden="true">
+    <div class="portal-split-card">
+      <div class="portal-split-head">
+        <div>
+          <p class="portal-split-eyebrow" data-i18n="portalSplitEyebrow">Live Portal</p>
+          <h3 id="portalSplitTitle" data-i18n="portalSplitTitle">PM-KISAN Portal</h3>
+        </div>
+        <button id="closePortalSplitBtn" type="button" class="secondary portal-split-close" data-i18n="closePortalPanel">Close Panel</button>
+      </div>
+      <p class="portal-split-help" data-i18n="portalSplitHelp">Use this panel to keep the portal open beside your extracted data. If the site stays blank, it is likely blocking embedding and you should use the new-tab button.</p>
+      <div id="portalSplitFallback" class="portal-split-fallback" hidden>
+        <strong data-i18n="portalSplitFallbackTitle">Portal not visible?</strong>
+        <p data-i18n="portalSplitFallbackBody">Some government sites block opening inside another page. If that happens, use the new-tab button below.</p>
+      </div>
+      <div class="portal-split-actions">
+        <button id="portalSplitOpenNewTabBtn" type="button" data-i18n="openPortalInNewTab">🔗 Open PM-KISAN Portal</button>
+      </div>
+      <iframe id="portalSplitFrame" class="portal-split-frame" title="PM-KISAN Portal" src="about:blank" loading="lazy" referrerpolicy="no-referrer"></iframe>
+    </div>
+  </aside>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
