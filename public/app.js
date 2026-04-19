@@ -552,6 +552,20 @@ function selectedFiles() {
   return selectedDocumentEntries().map((entry) => entry.file).filter(Boolean);
 }
 
+function refreshUploadSelectionHint() {
+  const hint = document.getElementById('uploadSelectionHint');
+  if (!hint) return;
+
+  const count = selectedDocumentEntries().length;
+  if (!count) {
+    hint.textContent = 'No documents uploaded yet.';
+    return;
+  }
+
+  const noun = count === 1 ? 'document' : 'documents';
+  hint.textContent = `${count} ${noun} uploaded. File picker may still show "No file chosen" after upload.`;
+}
+
 async function scanSupportingDocuments(filesToScan = selectedFiles()) {
   const root = document.getElementById('scannedDocsSummary');
   const files = Array.isArray(filesToScan) ? filesToScan : [];
@@ -559,6 +573,7 @@ async function scanSupportingDocuments(filesToScan = selectedFiles()) {
     scannedDocsByName = {};
     uploadedDocumentsByKey = {};
     if (root) root.innerHTML = '';
+    refreshUploadSelectionHint();
     return;
   }
 
@@ -615,6 +630,7 @@ async function scanSupportingDocuments(filesToScan = selectedFiles()) {
   applyDetectedAadhaarDetails();
   applyDetectedBankDetails();
   renderScannedDocsSummary();
+  refreshUploadSelectionHint();
 }
 
 function applyDetectedBankDetails() {
@@ -813,6 +829,7 @@ function deleteUploadedDocument(key) {
   applyDetectedBankDetails();
   renderScannedDocsSummary();
   renderDocChecklist();
+  refreshUploadSelectionHint();
   setAdminStatus('Document removed from upload list.');
 }
 
@@ -1792,3 +1809,5 @@ loadDistricts().catch((err) => {
     '<div class="card">Could not load regions. Start backend on http://localhost:3010 and retry.</div>';
   console.error(err);
 });
+
+refreshUploadSelectionHint();
