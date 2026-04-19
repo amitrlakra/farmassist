@@ -85,6 +85,8 @@ function extractNameFromText(text) {
 
   for (let i = 0; i < Math.min(lines.length, 40); i += 1) {
     const line = lines[i];
+    const prev = String(lines[i - 1] || "");
+    const next = String(lines[i + 1] || "");
 
     // Prefer two-to-four word name patterns.
     const direct = line.match(/\b([A-Za-z]{2,24}(?:\s+[A-Za-z]{2,24}){1,3})\b/);
@@ -94,22 +96,57 @@ function extractNameFromText(text) {
     if (!isLikelyPersonName(rawCandidate)) continue;
 
     let score = 0;
-    if (/(name|naam|नाम)/i.test(line)) score += 5;
-    if (i <= 20) score += 2;
-    if (/(dob|year\s*of\s*birth|male|female)/i.test(lines[i + 1] || "")) score += 2;
+    const hasNameAnchor = /(name|naam|नाम)/i.test(line) || /(name|naam|नाम)/i.test(prev);
+    const hasProfileAnchor = /(dob|year\s*of\s*birth|male|female)/i.test(next);
+
+    if (hasNameAnchor) score += 5;
+    if (hasProfileAnchor) score += 3;
     if (/(government|authority|india|uidai|aadhaar)/i.test(line)) score -= 4;
+
+    // Reject free-floating text that lacks Aadhaar profile anchors.
+    if (!hasNameAnchor && !hasProfileAnchor) continue;
 
     candidates.push({ name: rawCandidate, score, idx: i });
   }
 
   if (candidates.length) {
     candidates.sort((a, b) => b.score - a.score || a.idx - b.idx);
-    if (candidates[0].score >= 2) {
+    if (candidates[0].score >= 4) {
       return toTitleCase(candidates[0].name);
     }
   }
 
   return null;
+}
+
+function extractNameFromFileName(fileName) {
+  const raw = String(fileName || "").trim();
+  if (!raw) return null;
+
+  const withoutExt = raw.replace(/\.[^.]+$/, "");
+  const normalized = withoutExt
+    .replace(/[_\-.]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (!normalized) return null;
+
+  const noise = new Set([
+    "aadhaar", "aadhar", "adhar", "adhaar", "uid", "uidai", "card", "front", "back", "scan", "copy", "doc", "document", "pdf", "jpg", "jpeg", "png", "webp",
+  ]);
+
+  const tokens = normalized
+    .split(" ")
+    .map((t) => t.trim())
+    .filter(Boolean)
+    .filter((t) => !noise.has(t.toLowerCase()) && /^[A-Za-z]{2,24}$/.test(t));
+
+  if (!tokens.length) return null;
+  if (tokens.length > 4) return null;
+
+  return tokens
+    .map((word) => `${word.slice(0, 1).toUpperCase()}${word.slice(1).toLowerCase()}`)
+    .join(" ");
 }
 
 function extractDobFromText(text) {
@@ -227,7 +264,7 @@ async function extractTextFromBuffer({ buffer, mimeType }) {
   throw err;
 }
 
-async function extractAadhaarFromBuffer({ buffer, mimeType }) {
+async function extractAadhaarFromBuffer({ buffer, mimeType, fileName = "" }) {
   if (!buffer || buffer.length === 0) {
     const err = new Error("Empty document buffer");
     err.statusCode = 400;
@@ -239,7 +276,7 @@ async function extractAadhaarFromBuffer({ buffer, mimeType }) {
   const ocrText = String(extracted.text || "");
   const aadhaarCandidates = extractAadhaarCandidates(ocrText);
   const aadhaar = aadhaarCandidates.length > 0 ? aadhaarCandidates[0] : null;
-  const name = extractNameFromText(ocrText);
+  const name = extractNameFromText(ocrText) || extractNameFromFileName(fileName);
   const dob = extractDobFromText(ocrText);
 
   let confidence = 0;
