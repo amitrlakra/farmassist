@@ -103,6 +103,7 @@ const UI_TEXT = {
     labelUploadDocs: 'Upload Documents (Aadhaar and Bank details are auto-extracted from these files)',
     autoFillBtn: 'Auto Fill From Documents',
     scanAadhaarBtn: 'Scan Aadhaar from File',
+    scanBankBtn: 'Scan Bank Passbook',
     scanRorBtn: 'Scan Land Record (RoR/Khatiyan)',
     openPortalBtn: 'Open Official Portal (Manual Submit)',
     copyPrefillBtn: 'Copy Prefill Details',
@@ -196,6 +197,7 @@ const UI_TEXT = {
     labelUploadDocs: 'कागज़ात यहाँ जोड़ें (आधार और बैंक की जानकारी इन्हीं से निकाली जाएगी)',
     autoFillBtn: 'दस्तावेज़ों से ऑटो भरें',
     scanAadhaarBtn: 'फ़ाइल से आधार पहचानें',
+    scanBankBtn: 'बैंक पासबुक स्कैन करें',
     scanRorBtn: 'भूमि रिकॉर्ड स्कैन करें (RoR/खतौनी)',
     openPortalBtn: 'सरकारी वेबसाइट खोलें (जमा खुद करें)',
     copyPrefillBtn: 'भरी हुई जानकारी नकल करें',
@@ -352,6 +354,9 @@ function applyUiLanguage() {
 
   const scanBtn = document.getElementById('scanAadhaarBtn');
   if (scanBtn) scanBtn.textContent = t('scanAadhaarBtn');
+
+  const scanBankBtn = document.getElementById('scanBankBtn');
+  if (scanBankBtn) scanBankBtn.textContent = t('scanBankBtn');
 
   const scanRorBtn = document.getElementById('scanRorBtn');
   if (scanRorBtn) scanRorBtn.textContent = t('scanRorBtn');
@@ -760,17 +765,34 @@ function applyDetectedBankDetails() {
   const account = String(fields.account_number || (fields.account_number_candidates || [])[0] || '').trim();
   const ifsc = String(fields.ifsc || (fields.ifsc_candidates || [])[0] || '').trim();
 
-  if (bankName) {
+  const nameEl = document.getElementById('applyBankName');
+  const canFillBankName = !nameEl?.value?.trim() || nameEl?.dataset?.source === 'bank_passbook';
+  const canFillAccount = !accountEl?.value?.trim() || accountEl?.dataset?.source === 'bank_passbook';
+  const canFillIfsc = !ifscEl?.value?.trim() || ifscEl?.dataset?.source === 'bank_passbook';
+
+  const filledFields = [];
+  if (bankName && canFillBankName) {
     bankNameEl.value = bankName;
     bankNameEl.dataset.source = 'bank_passbook';
+    filledFields.push('Bank Name');
   }
-  if (account) {
+  if (account && canFillAccount) {
     accountEl.value = account;
     accountEl.dataset.source = 'bank_passbook';
+    filledFields.push('Account #');
   }
-  if (ifsc) {
+  if (ifsc && canFillIfsc) {
     ifscEl.value = ifsc;
     ifscEl.dataset.source = 'bank_passbook';
+    filledFields.push('IFSC');
+  }
+  
+  if (filledFields.length > 0) {
+    const confidence = Math.round(Number(best.confidence || 0) * 100);
+    const confidenceNote = confidence >= 80 ? '' : ` (Confidence: ${confidence}% - please review)`;
+    setAdminStatus(
+      `Bank details extracted from ${best.fileName}: ${filledFields.join(', ')}${confidenceNote}`
+    );
   }
   
   // Validate account number completeness
@@ -1795,6 +1817,97 @@ async function scanLandRecordFromSelectedFile() {
   }
 }
 
+async function scanBankPassbookFromSelectedFile() {
+  const files = selectedFiles();
+  if (!files || files.length === 0) {
+    setAdminStatus('Please upload a bank passbook document image.', true);
+    return;
+  }
+
+  // Use first uploaded file for bank passbook extraction
+  const fileToScan = files[0];
+  
+  let fileToSend = fileToScan;
+  let convertedFromPdf = false;
+  if (isPdfFile(fileToScan)) {
+    const converted = await convertPdfFirstPageToPngFile(fileToScan);
+    if (converted) {
+      fileToSend = converted;
+      convertedFromPdf = true;
+    }
+  }
+
+  const formData = new FormData();
+  formData.append('document', fileToSend);
+
+  try {
+    setAdminStatus(
+      convertedFromPdf
+        ? `Scanning ${fileToScan.name} (converted first PDF page to image) for bank passbook details...`
+        : `Scanning ${fileToScan.name} for bank passbook details...`
+    );
+
+    const res = await fetch(`${API_BASE}/api/extract/document`, {
+      method: 'POST',
+      body: formData
+    });
+
+    const data = await res.json();
+    if (!res.ok || !data.ok) {
+      throw new Error(data?.error || 'Bank passbook scan failed');
+    }
+
+    if (data.detected_type !== 'bank_passbook') {
+      setAdminStatus(
+        `Document appears to be ${data.detected_type || 'unknown'} (not a bank passbook). ` +
+        `Confidence: ${Math.round(Number(data.confidence || 0) * 100)}%. Please upload a clear bank passbook image.`,
+        true
+      );
+      return;
+    }
+
+    const fields = data.fields || {};
+    const bankName = (fields.bank_name || (fields.bank_name_candidates || [])[0] || '').trim();
+    const account = String(fields.account_number || (fields.account_number_candidates || [])[0] || '').trim();
+    const ifsc = String(fields.ifsc || (fields.ifsc_candidates || [])[0] || '').trim();
+
+    const filledFields = [];
+    if (bankName) {
+      document.getElementById('applyBankName').value = bankName;
+      document.getElementById('applyBankName').dataset.source = 'bank_passbook';
+      filledFields.push(`Bank: ${bankName}`);
+    }
+    if (account) {
+      document.getElementById('applyBankAccountNumber').value = account;
+      document.getElementById('applyBankAccountNumber').dataset.source = 'bank_passbook';
+      filledFields.push(`Account: ${account}`);
+    }
+    if (ifsc) {
+      document.getElementById('applyIfsc').value = ifsc;
+      document.getElementById('applyIfsc').dataset.source = 'bank_passbook';
+      filledFields.push(`IFSC: ${ifsc}`);
+    }
+
+    const confidence = Math.round(Number(data.confidence || 0) * 100);
+    if (filledFields.length > 0) {
+      setAdminStatus(
+        `Bank passbook extracted (Confidence: ${confidence}%). ` +
+        `Auto-filled: ${filledFields.join(' | ')}`
+      );
+    } else {
+      setAdminStatus(
+        `Bank passbook detected but no fields extracted. Please check image quality and ensure all details are visible.`,
+        true
+      );
+    }
+    
+    validateAccountNumber();
+    renderDocChecklist();
+  } catch (err) {
+    setAdminStatus(`Bank passbook scan failed: ${err.message}`, true);
+  }
+}
+
 async function fetchSchemes() {
   const payload = buildPayload();
   document.getElementById('results').innerHTML = `<div class="card">${t('loading')}</div>`;
@@ -2064,6 +2177,9 @@ document.getElementById('applicationDocs').addEventListener('change', async () =
 });
 document.getElementById('scanAadhaarBtn').addEventListener('click', () => {
   scanAadhaarFromSelectedFile(null, { allowFallback: true, preserveExisting: true });
+});
+document.getElementById('scanBankBtn').addEventListener('click', () => {
+  scanBankPassbookFromSelectedFile();
 });
 document.getElementById('scanRorBtn').addEventListener('click', () => {
   scanLandRecordFromSelectedFile();
