@@ -2,7 +2,6 @@ services:
   - type: web
     name: farmassist-jharkhand-pilot
     runtime: node
-    rootDir: farmassist
     plan: free
     buildCommand: npm install
     startCommand: npm start
