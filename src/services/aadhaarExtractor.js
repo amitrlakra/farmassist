@@ -35,17 +35,77 @@ function extractNameFromText(text) {
   const input = String(text || "").trim();
   if (!input.length || input.length > 20000) return null;
 
-  const labelMatch = input.match(/(?:name|naam|नाम)[:\s-]*([A-Z][A-Za-z\s]{3,50})/i);
-  if (labelMatch && labelMatch[1]) {
-    const name = labelMatch[1].trim().split(/\s+/).slice(0, 5).join(" ");
-    if (/^[A-Za-z\s]{3,50}$/.test(name)) return name;
+  const badParts = [
+    "government",
+    "govt",
+    "india",
+    "authority",
+    "uidai",
+    "aadhaar",
+    "enrol",
+    "enroll",
+    "dob",
+    "birth",
+    "male",
+    "female",
+    "address",
+  ];
+
+  const toTitleCase = (value) => value
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((word) => `${word.slice(0, 1).toUpperCase()}${word.slice(1).toLowerCase()}`)
+    .join(" ");
+
+  const isLikelyPersonName = (value) => {
+    const candidate = String(value || "").replace(/[^A-Za-z\s]/g, " ").replace(/\s+/g, " ").trim();
+    if (!candidate) return false;
+
+    const lower = candidate.toLowerCase();
+    if (badParts.some((p) => lower.includes(p))) return false;
+
+    const words = candidate.split(" ");
+    if (words.length < 2 || words.length > 4) return false;
+    if (words.some((w) => w.length < 2 || w.length > 24)) return false;
+
+    // Avoid noisy OCR fragments with too many tiny words.
+    const shortWords = words.filter((w) => w.length <= 2).length;
+    if (shortWords > 1) return false;
+
+    return true;
+  };
+
+  const labelMatch = input.match(/(?:name|naam|नाम)\s*[:\-]?\s*([A-Za-z][A-Za-z\s]{3,60})/i);
+  if (labelMatch && labelMatch[1] && isLikelyPersonName(labelMatch[1])) {
+    return toTitleCase(labelMatch[1].replace(/\s+/g, " ").trim());
   }
 
   const lines = input.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
-  for (const line of lines.slice(0, 20)) {
-    const match = line.match(/^([A-Z][A-Za-z\s]{3,50})$/);
-    if (match && !/^(YOUR|THE|GOVERNMENT|AUTHORITY|INDIA|AADHAAR)/i.test(match[1])) {
-      return match[1].trim();
+  const candidates = [];
+
+  for (let i = 0; i < Math.min(lines.length, 40); i += 1) {
+    const line = lines[i];
+
+    // Prefer two-to-four word name patterns.
+    const direct = line.match(/\b([A-Za-z]{2,24}(?:\s+[A-Za-z]{2,24}){1,3})\b/);
+    if (!direct || !direct[1]) continue;
+
+    const rawCandidate = direct[1].replace(/\s+/g, " ").trim();
+    if (!isLikelyPersonName(rawCandidate)) continue;
+
+    let score = 0;
+    if (/(name|naam|नाम)/i.test(line)) score += 5;
+    if (i <= 20) score += 2;
+    if (/(dob|year\s*of\s*birth|male|female)/i.test(lines[i + 1] || "")) score += 2;
+    if (/(government|authority|india|uidai|aadhaar)/i.test(line)) score -= 4;
+
+    candidates.push({ name: rawCandidate, score, idx: i });
+  }
+
+  if (candidates.length) {
+    candidates.sort((a, b) => b.score - a.score || a.idx - b.idx);
+    if (candidates[0].score >= 2) {
+      return toTitleCase(candidates[0].name);
     }
   }
 
