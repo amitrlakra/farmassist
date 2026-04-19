@@ -116,6 +116,39 @@
           <small style="color: #666; display: block; margin-top: 4px;">If auto-detection fails, find your IFSC code from your passbook's first page or <a href="https://www.upi-india.org/ifsc" target="_blank">lookup here</a></small>
         </div>
       </div>
+      <div style="margin-top: 12px;">
+        <h3 style="margin: 0 0 8px; font-size: 16px;" data-i18n="landDetailsHeading">Land Details (PM-KISAN entry)</h3>
+      </div>
+      <div class="grid" style="margin-top: 8px;">
+        <div><label data-i18n="labelLandState">Land State</label><input id="landState" type="text" placeholder="State" /></div>
+        <div><label data-i18n="labelLandDistrict">Land District</label><input id="landDistrict" type="text" placeholder="District" /></div>
+        <div><label data-i18n="labelLandSubDistrict">Sub-district / Tehsil</label><input id="landSubDistrict" type="text" placeholder="Sub-district / Tehsil" /></div>
+        <div><label data-i18n="labelLandBlock">Block</label><input id="landBlock" type="text" placeholder="Block" /></div>
+        <div><label data-i18n="labelLandVillage">Village</label><input id="landVillage" type="text" placeholder="Village" /></div>
+        <div>
+          <label data-i18n="labelLandHoldingType">Single / Joint Land Holding</label>
+          <select id="landHoldingType">
+            <option value="">Select</option>
+            <option value="single">Single</option>
+            <option value="joint">Joint</option>
+          </select>
+        </div>
+        <div><label data-i18n="labelKhataNo">Khata No.</label><input id="landKhataNo" type="text" placeholder="Khata No." /></div>
+        <div><label data-i18n="labelSurveyNo">Survey / Khasra / Dag No.</label><input id="landSurveyNo" type="text" placeholder="Survey / Khasra / Dag No." /></div>
+        <div><label data-i18n="labelLandArea">Area</label><input id="landArea" type="text" placeholder="Area (e.g., 1.25 acre)" /></div>
+        <div><label data-i18n="labelLandTransferDetails">Land Transfer Details</label><input id="landTransferDetails" type="text" placeholder="Transfer details or N/A" /></div>
+        <div><label data-i18n="labelLandDateVesting">Land Date of Vesting</label><input id="landDateVesting" type="date" /></div>
+        <div>
+          <label data-i18n="labelPattaRfa">Patta No / RFA (Yes/No)</label>
+          <select id="landPattaRfa">
+            <option value="">Select</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+        <div><label data-i18n="labelLandAadhaar">Aadhaar No. for Land Section</label><input id="landAadhaarNo" type="text" placeholder="Leave blank to use Aadhaar above" /></div>
+        <div><label data-i18n="labelLandApplicantName">Name for Land Section</label><input id="landApplicantName" type="text" placeholder="Leave blank to use Applicant Name above" /></div>
+      </div>
       <div style="margin-top: 10px;">
         <label data-i18n="labelUploadDocs">Upload Documents (Aadhaar and Bank details are auto-extracted from these files)</label>
         <input id="applicationDocs" type="file" multiple />

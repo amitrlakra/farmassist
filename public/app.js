@@ -84,6 +84,21 @@ const UI_TEXT = {
     labelBankName: 'Bank Name (Auto-detected from Passbook)',
     labelBankAccount2: 'Bank Account Number (Auto-detected or Manual)',
     labelIfsc: 'IFSC Code (Auto-detected or Manual)',
+    landDetailsHeading: 'Land Details (PM-KISAN entry)',
+    labelLandState: 'Land State',
+    labelLandDistrict: 'Land District',
+    labelLandSubDistrict: 'Sub-district / Tehsil',
+    labelLandBlock: 'Block',
+    labelLandVillage: 'Village',
+    labelLandHoldingType: 'Single / Joint Land Holding',
+    labelKhataNo: 'Khata No.',
+    labelSurveyNo: 'Survey / Khasra / Dag No.',
+    labelLandArea: 'Area',
+    labelLandTransferDetails: 'Land Transfer Details',
+    labelLandDateVesting: 'Land Date of Vesting',
+    labelPattaRfa: 'Patta No / RFA (Yes/No)',
+    labelLandAadhaar: 'Aadhaar No. for Land Section',
+    labelLandApplicantName: 'Name for Land Section',
     labelUploadDocs: 'Upload Documents (Aadhaar and Bank details are auto-extracted from these files)',
     autoFillBtn: 'Auto Fill From Documents',
     scanAadhaarBtn: 'Scan Aadhaar from File',
@@ -160,6 +175,21 @@ const UI_TEXT = {
     labelBankName: 'बैंक का नाम (पासबुक से अपने आप भरा जाएगा)',
     labelBankAccount2: 'बैंक खाता संख्या (अपने आप भरी जाएगी या खुद लिखें)',
     labelIfsc: 'IFSC कोड (अपने आप भरा जाएगा या खुद लिखें)',
+    landDetailsHeading: 'भूमि विवरण (PM-KISAN प्रविष्टि)',
+    labelLandState: 'भूमि का राज्य',
+    labelLandDistrict: 'भूमि का जिला',
+    labelLandSubDistrict: 'उप-जिला / तहसील',
+    labelLandBlock: 'ब्लॉक',
+    labelLandVillage: 'गांव',
+    labelLandHoldingType: 'एकल / संयुक्त भूमि धारक',
+    labelKhataNo: 'खाता संख्या',
+    labelSurveyNo: 'सर्वे / खसरा / दाग संख्या',
+    labelLandArea: 'क्षेत्रफल',
+    labelLandTransferDetails: 'भूमि हस्तांतरण विवरण',
+    labelLandDateVesting: 'भूमि वेस्टिंग तिथि',
+    labelPattaRfa: 'पट्टा संख्या / RFA (हाँ/नहीं)',
+    labelLandAadhaar: 'भूमि अनुभाग के लिए आधार संख्या',
+    labelLandApplicantName: 'भूमि अनुभाग के लिए नाम',
     labelUploadDocs: 'कागज़ात यहाँ जोड़ें (आधार और बैंक की जानकारी इन्हीं से निकाली जाएगी)',
     autoFillBtn: 'दस्तावेज़ों से ऑटो भरें',
     scanAadhaarBtn: 'फ़ाइल से आधार पहचानें',
@@ -1005,6 +1035,20 @@ function prefillText() {
   const bankName = document.getElementById('applyBankName').value.trim() || '-';
   const bankAccountNumber = document.getElementById('applyBankAccountNumber').value.trim() || '-';
   const ifsc = document.getElementById('applyIfsc').value.trim() || '-';
+  const landState = document.getElementById('landState').value.trim() || payload.state || '-';
+  const landDistrict = document.getElementById('landDistrict').value.trim() || payload.district || '-';
+  const landSubDistrict = document.getElementById('landSubDistrict').value.trim() || '-';
+  const landBlock = document.getElementById('landBlock').value.trim() || '-';
+  const landVillage = document.getElementById('landVillage').value.trim() || '-';
+  const landHoldingType = document.getElementById('landHoldingType').value.trim() || '-';
+  const landKhataNo = document.getElementById('landKhataNo').value.trim() || '-';
+  const landSurveyNo = document.getElementById('landSurveyNo').value.trim() || '-';
+  const landArea = document.getElementById('landArea').value.trim() || '-';
+  const landTransferDetails = document.getElementById('landTransferDetails').value.trim() || '-';
+  const landDateVesting = document.getElementById('landDateVesting').value.trim() || '-';
+  const landPattaRfa = document.getElementById('landPattaRfa').value.trim() || '-';
+  const landAadhaarNo = document.getElementById('landAadhaarNo').value.trim() || aadhaar || '-';
+  const landApplicantName = document.getElementById('landApplicantName').value.trim() || name || '-';
 
   return [
     `Scheme: ${selectedScheme.name}`,
@@ -1014,6 +1058,20 @@ function prefillText() {
     `Bank Name: ${bankName}`,
     `Bank Account Number: ${bankAccountNumber}`,
     `IFSC: ${ifsc}`,
+    `Land State: ${landState}`,
+    `Land District: ${landDistrict}`,
+    `Land Sub-district/Tehsil: ${landSubDistrict}`,
+    `Land Block: ${landBlock}`,
+    `Land Village: ${landVillage}`,
+    `Single/Joint: ${landHoldingType}`,
+    `Khata No: ${landKhataNo}`,
+    `Survey/Khasra/Dag No: ${landSurveyNo}`,
+    `Land Area: ${landArea}`,
+    `Land Transfer Details: ${landTransferDetails}`,
+    `Land Date Vesting: ${landDateVesting}`,
+    `Patta No/RFA: ${landPattaRfa}`,
+    `Land Section Aadhaar: ${landAadhaarNo}`,
+    `Land Section Name: ${landApplicantName}`,
     `State: ${payload.state}`,
     `District: ${payload.district}`,
     `Farm Size: ${payload.farmSize}`,
@@ -1052,6 +1110,12 @@ function openApplyAssistant(scheme) {
   }
   if (!document.getElementById('applyIfsc').value.trim()) {
     document.getElementById('applyIfsc').value = '';
+  }
+  if (!document.getElementById('landState').value.trim()) {
+    document.getElementById('landState').value = document.getElementById('state').value || '';
+  }
+  if (!document.getElementById('landDistrict').value.trim()) {
+    document.getElementById('landDistrict').value = document.getElementById('district').value || '';
   }
   Object.values(uploadedDocumentsByKey).forEach((entry) => {
     if (entry?.downloadUrl) URL.revokeObjectURL(entry.downloadUrl);
@@ -1139,6 +1203,22 @@ function downloadApplicationPacket() {
       bankName: document.getElementById('applyBankName').value.trim() || '',
       bankAccountNumber: document.getElementById('applyBankAccountNumber').value.trim() || '',
       ifsc: document.getElementById('applyIfsc').value.trim() || '',
+      landDetails: {
+        state: document.getElementById('landState').value.trim() || payload.state,
+        district: document.getElementById('landDistrict').value.trim() || payload.district,
+        subDistrict: document.getElementById('landSubDistrict').value.trim() || '',
+        block: document.getElementById('landBlock').value.trim() || '',
+        village: document.getElementById('landVillage').value.trim() || '',
+        singleOrJoint: document.getElementById('landHoldingType').value.trim() || '',
+        khataNo: document.getElementById('landKhataNo').value.trim() || '',
+        surveyKhasraDagNo: document.getElementById('landSurveyNo').value.trim() || '',
+        area: document.getElementById('landArea').value.trim() || '',
+        landTransferDetails: document.getElementById('landTransferDetails').value.trim() || '',
+        landDateVesting: document.getElementById('landDateVesting').value.trim() || '',
+        pattaRfa: document.getElementById('landPattaRfa').value.trim() || '',
+        aadhaarNo: document.getElementById('landAadhaarNo').value.trim() || document.getElementById('applyAadhaar').value.trim() || '',
+        applicantName: document.getElementById('landApplicantName').value.trim() || document.getElementById('applyName').value.trim() || '',
+      },
       state: payload.state,
       district: payload.district,
       farmSize: payload.farmSize,
@@ -1200,6 +1280,20 @@ function buildReadinessChecklist() {
   const bankName = document.getElementById('applyBankName').value.trim();
   const bankAcc = document.getElementById('applyBankAccountNumber').value.replace(/\D/g, '');
   const ifsc = document.getElementById('applyIfsc').value.trim();
+  const landState = document.getElementById('landState').value.trim();
+  const landDistrict = document.getElementById('landDistrict').value.trim();
+  const landSubDistrict = document.getElementById('landSubDistrict').value.trim();
+  const landBlock = document.getElementById('landBlock').value.trim();
+  const landVillage = document.getElementById('landVillage').value.trim();
+  const landHoldingType = document.getElementById('landHoldingType').value.trim();
+  const landKhataNo = document.getElementById('landKhataNo').value.trim();
+  const landSurveyNo = document.getElementById('landSurveyNo').value.trim();
+  const landArea = document.getElementById('landArea').value.trim();
+  const landTransferDetails = document.getElementById('landTransferDetails').value.trim();
+  const landDateVesting = document.getElementById('landDateVesting').value.trim();
+  const landPattaRfa = document.getElementById('landPattaRfa').value.trim();
+  const landAadhaar = (document.getElementById('landAadhaarNo').value || document.getElementById('applyAadhaar').value || '').replace(/\D/g, '');
+  const landName = (document.getElementById('landApplicantName').value || document.getElementById('applyName').value || '').trim();
   const allScanned = Object.values(scannedDocsByName || {});
   const hasAadhaarDoc = allScanned.some(row => effectiveDetectedType(row) === 'aadhaar');
   const hasBankDoc = allScanned.some(row => effectiveDetectedType(row) === 'bank_passbook');
@@ -1211,6 +1305,20 @@ function buildReadinessChecklist() {
     { label: 'Bank Name',                 ok: bankName.length > 0,                    hint: 'Upload your bank passbook to auto-detect, or type the bank name.' },
     { label: 'Bank Account Number',       ok: bankAcc.length >= 9,                    hint: 'Upload your passbook or type the account number (9–18 digits).' },
     { label: 'IFSC Code',                 ok: /^[A-Z]{4}0[A-Z0-9]{6}$/.test(ifsc),   hint: 'Enter the 11-character IFSC code from your passbook.' },
+    { label: 'Land State',                ok: landState.length > 0,                   hint: 'Enter land record state as asked on PM-KISAN.' },
+    { label: 'Land District',             ok: landDistrict.length > 0,                hint: 'Enter land record district.' },
+    { label: 'Land Sub-district/Tehsil',  ok: landSubDistrict.length > 0,             hint: 'Enter sub-district/tehsil from land records.' },
+    { label: 'Land Block',                ok: landBlock.length > 0,                   hint: 'Enter block.' },
+    { label: 'Land Village',              ok: landVillage.length > 0,                 hint: 'Enter village.' },
+    { label: 'Single/Joint Holding',      ok: ['single', 'joint'].includes(landHoldingType.toLowerCase()), hint: 'Select whether holding is single or joint.' },
+    { label: 'Khata No',                  ok: landKhataNo.length > 0,                 hint: 'Enter Khata number from land record.' },
+    { label: 'Survey/Khasra/Dag No',      ok: landSurveyNo.length > 0,                hint: 'Enter survey/khasra/dag number.' },
+    { label: 'Land Area',                 ok: landArea.length > 0,                    hint: 'Enter area exactly as record.' },
+    { label: 'Land Transfer Details',     ok: landTransferDetails.length > 0,         hint: 'Enter transfer details or N/A.' },
+    { label: 'Land Date of Vesting',      ok: landDateVesting.length > 0,             hint: 'Select vesting date from records.' },
+    { label: 'Patta No/RFA',              ok: ['yes', 'no'].includes(landPattaRfa.toLowerCase()), hint: 'Select Yes/No.' },
+    { label: 'Land Section Aadhaar',      ok: landAadhaar.length === 12,              hint: 'Use Aadhaar number for land section.' },
+    { label: 'Land Section Name',         ok: landName.length > 0,                    hint: 'Use applicant name for land section.' },
     { label: 'Aadhaar document uploaded', ok: hasAadhaarDoc,                          hint: 'Upload your Aadhaar PDF or image under "Upload Documents".' },
     { label: 'Bank passbook uploaded',    ok: hasBankDoc,                             hint: 'Upload your bank passbook PDF or image under "Upload Documents".' },
   ];
