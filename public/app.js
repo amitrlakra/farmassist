@@ -106,9 +106,16 @@ const UI_TEXT = {
     scanBankBtn: 'Scan Bank Passbook',
     scanRorBtn: 'Scan Land Record (RoR/Khatiyan)',
     scanLagaanBtn: 'Scan Tax Receipt (Lagaan/Rasid)',
+    guidedSubmissionBtn: '📋 Guided PM-KISAN Submission',
     openPortalBtn: 'Open Official Portal (Manual Submit)',
     copyPrefillBtn: 'Copy Prefill Details',
     downloadPacketBtn: 'Download Application Packet',
+    guidedSubmissionTitle: 'Step-by-Step PM-KISAN Application Guide',
+    guidedPortalHint: 'Portal Hint:',
+    previousStep: '← Previous',
+    nextStep: 'Next →',
+    openPortalInNewTab: '🔗 Open PM-KISAN Portal',
+    completeSubmissionBtn: '✓ Submission Complete',
     schemesBenefit: 'Benefit',
     schemesHowToApply: 'How to Apply',
     schemesEligibility: 'Eligibility',
@@ -201,9 +208,16 @@ const UI_TEXT = {
     scanBankBtn: 'बैंक पासबुक स्कैन करें',
     scanRorBtn: 'भूमि रिकॉर्ड स्कैन करें (RoR/खतौनी)',
     scanLagaanBtn: 'टैक्स रसीद स्कैन करें (लगान/रसद)',
+    guidedSubmissionBtn: '📋 निर्देशित PM-KISAN आवेदन',
     openPortalBtn: 'सरकारी वेबसाइट खोलें (जमा खुद करें)',
     copyPrefillBtn: 'भरी हुई जानकारी नकल करें',
     downloadPacketBtn: 'आवेदन सामग्री सहेजें',
+    guidedSubmissionTitle: 'PM-KISAN आवेदन के लिए चरण-दर-चरण गाइड',
+    guidedPortalHint: 'पोर्टल सुझाव:',
+    previousStep: '← पिछला',
+    nextStep: 'अगला →',
+    openPortalInNewTab: '🔗 PM-KISAN पोर्टल खोलें',
+    completeSubmissionBtn: '✓ आवेदन पूर्ण',
     schemesBenefit: 'मिलने वाला लाभ',
     schemesHowToApply: 'आवेदन कैसे करें',
     schemesEligibility: 'पात्रता',
@@ -817,6 +831,51 @@ function validateAccountNumber() {
   }
 }
 
+function copyFieldValue(fieldId, fieldLabel) {
+  const field = document.getElementById(fieldId);
+  if (!field || !field.value) {
+    alert(`${fieldLabel} is empty. Please fill it first.`);
+    return;
+  }
+  
+  // Copy to clipboard
+  navigator.clipboard.writeText(field.value).then(() => {
+    showNotification(`✓ ${fieldLabel} copied!`, 'success');
+  }).catch(() => {
+    // Fallback for older browsers
+    const textarea = document.createElement('textarea');
+    textarea.value = field.value;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    showNotification(`✓ ${fieldLabel} copied!`, 'success');
+  });
+}
+
+function showNotification(message, type = 'info') {
+  // Show a toast-like notification
+  const notif = document.createElement('div');
+  notif.style.cssText = `
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: ${type === 'success' ? '#10b981' : '#3b82f6'};
+    color: white;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    z-index: 10000;
+    animation: slideInUp 0.3s ease;
+  `;
+  notif.textContent = message;
+  document.body.appendChild(notif);
+  setTimeout(() => {
+    notif.style.animation = 'slideOutDown 0.3s ease';
+    setTimeout(() => notif.remove(), 300);
+  }, 3000);
+}
+
 // Add real-time validation listener to account number field
 document.addEventListener('DOMContentLoaded', function() {
   const accountEl = document.getElementById('applyBankAccountNumber');
@@ -827,6 +886,50 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Load states on page load
   loadStates().catch(console.error);
+
+  // Guided submission button handlers
+  const guidedNextBtn = document.getElementById('guidedNextBtn');
+  const guidedPrevBtn = document.getElementById('guidedPrevBtn');
+  const guidedOpenPortalBtn = document.getElementById('guidedOpenPortalBtn');
+  const guidedCompleteBtn = document.getElementById('guidedCompleteBtn');
+  const guidedCloseBtn = document.getElementById('guidedCloseBtn');
+
+  if (guidedNextBtn) {
+    guidedNextBtn.addEventListener('click', function() {
+      if (currentGuidedStep < guidedSteps.length - 1) {
+        currentGuidedStep++;
+        renderGuidedStep();
+      }
+    });
+  }
+
+  if (guidedPrevBtn) {
+    guidedPrevBtn.addEventListener('click', function() {
+      if (currentGuidedStep > 0) {
+        currentGuidedStep--;
+        renderGuidedStep();
+      }
+    });
+  }
+
+  if (guidedOpenPortalBtn) {
+    guidedOpenPortalBtn.addEventListener('click', function() {
+      // Open PM-KISAN portal in new tab
+      window.open('https://pmkisan.gov.in', '_blank');
+      showNotification('Portal opened in new tab. Paste your fields and submit!', 'info');
+    });
+  }
+
+  if (guidedCompleteBtn) {
+    guidedCompleteBtn.addEventListener('click', function() {
+      closeGuidedSubmissionWalkthrough();
+      showNotification('✓ PM-KISAN submission complete! Your application has been submitted.', 'success');
+    });
+  }
+
+  if (guidedCloseBtn) {
+    guidedCloseBtn.addEventListener('click', closeGuidedSubmissionWalkthrough);
+  }
 });
 function renderScannedDocsSummary() {
   const root = document.getElementById('scannedDocsSummary');
@@ -2020,6 +2123,131 @@ async function fetchSchemes() {
   }
 }
 
+// Guided Submission Walkthrough
+let currentGuidedStep = 0;
+const guidedSteps = [
+  {
+    title: 'Personal Details',
+    hint: 'Go to "Personal Details" section on PM-KISAN portal. Fill your name, mobile number, and Aadhaar number.',
+    fields: [
+      { label: 'Full Name', id: 'applyName' },
+      { label: 'Mobile Number', id: 'applyMobile' },
+      { label: 'Aadhaar Number', id: 'applyAadhaar' }
+    ]
+  },
+  {
+    title: 'Bank Details',
+    hint: 'Go to "Bank Details" section. Fill your bank name, account number, and IFSC code.',
+    fields: [
+      { label: 'Bank Name', id: 'applyBankName' },
+      { label: 'Account Number', id: 'applyBankAccountNumber' },
+      { label: 'IFSC Code', id: 'applyIfsc' }
+    ]
+  },
+  {
+    title: 'Land Details',
+    hint: 'Go to "Land Details" section. Fill all land information: state, district, village, khata, survey no, area.',
+    fields: [
+      { label: 'State', id: 'landState' },
+      { label: 'District', id: 'landDistrict' },
+      { label: 'Village', id: 'landVillage' },
+      { label: 'Khata No', id: 'landKhataNo' },
+      { label: 'Survey / Khasra / Dag No', id: 'landSurveyNo' },
+      { label: 'Area', id: 'landArea' }
+    ]
+  }
+];
+
+function renderGuidedStep() {
+  const step = guidedSteps[currentGuidedStep];
+  const overlay = document.getElementById('guidedSubmissionOverlay');
+  const titleEl = document.getElementById('guidedTitle');
+  const contentEl = document.getElementById('guidedContent');
+  const hintEl = document.getElementById('guidedHint');
+  const fieldsEl = document.getElementById('guidedFields');
+  const stepIndicator = document.getElementById('guidedStepIndicator');
+  const prevBtn = document.getElementById('guidedPrevBtn');
+  const nextBtn = document.getElementById('guidedNextBtn');
+
+  if (!step) return;
+
+  titleEl.textContent = `Step ${currentGuidedStep + 1}: ${step.title}`;
+  hintEl.textContent = step.hint;
+  stepIndicator.textContent = `Step ${currentGuidedStep + 1} of ${guidedSteps.length}`;
+
+  // Rich content for each step
+  let richContent = '';
+  if (currentGuidedStep === 0) {
+    richContent = `
+      <p><strong>Instructions:</strong></p>
+      <ol style="margin-left:20px;">
+        <li>Click "Personal Details" on PM-KISAN portal</li>
+        <li>For each field below, click "Copy" button</li>
+        <li>Paste it into the corresponding field on the portal</li>
+        <li>Click "Next" when all fields are filled</li>
+      </ol>
+    `;
+  } else if (currentGuidedStep === 1) {
+    richContent = `
+      <p><strong>Instructions:</strong></p>
+      <ol style="margin-left:20px;">
+        <li>On the portal, look for "Bank Account Details" section</li>
+        <li>Copy each field below and paste into the portal</li>
+        <li>Make sure values match your actual bank passbook exactly</li>
+        <li>Click "Next" to proceed to land details</li>
+      </ol>
+    `;
+  } else if (currentGuidedStep === 2) {
+    richContent = `
+      <p><strong>Instructions:</strong></p>
+      <ol style="margin-left:20px;">
+        <li>On the portal, find "Land Details" section</li>
+        <li>Fill state/district dropdowns from your extracted data</li>
+        <li>For each text field, copy from the boxes below</li>
+        <li>After filling all fields, you're ready to submit!</li>
+      </ol>
+    `;
+  }
+  contentEl.innerHTML = richContent;
+
+  // Render field copy buttons
+  let fieldsHTML = '';
+  for (const field of step.fields) {
+    const value = document.getElementById(field.id)?.value || '(not filled)';
+    const isEmpty = !value || value === '(not filled)';
+    const isValid = !isEmpty;
+    fieldsHTML += `
+      <div style="background:#f9f9f9; padding:12px; margin-bottom:10px; border-left:4px solid ${isValid ? '#10b981' : '#999'}; border-radius:4px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
+          <div>
+            <div style="font-weight:bold; color:#333;">${field.label}</div>
+            <div style="color:#666; font-size:13px; margin-top:4px; word-break:break-all;">${value}</div>
+          </div>
+          <button type="button" class="secondary" onclick="copyFieldValue('${field.id}', '${field.label}')" style="white-space:nowrap; padding:8px 12px; font-size:12px;">📋 Copy</button>
+        </div>
+      </div>
+    `;
+  }
+  fieldsEl.innerHTML = fieldsHTML || '<p style="color:#999;">No fields to fill yet.</p>';
+
+  // Toggle button states
+  prevBtn.disabled = currentGuidedStep === 0;
+  nextBtn.disabled = currentGuidedStep === guidedSteps.length - 1;
+  
+  prevBtn.style.opacity = currentGuidedStep === 0 ? '0.5' : '1';
+  nextBtn.style.opacity = currentGuidedStep === guidedSteps.length - 1 ? '0.5' : '1';
+}
+
+function openGuidedSubmissionWalkthrough() {
+  currentGuidedStep = 0;
+  document.getElementById('guidedSubmissionOverlay').style.display = 'block';
+  renderGuidedStep();
+}
+
+function closeGuidedSubmissionWalkthrough() {
+  document.getElementById('guidedSubmissionOverlay').style.display = 'none';
+}
+
 function setAdminStatus(message, isError = false) {
   const el = document.getElementById('adminStatus');
   el.textContent = message;
@@ -2286,6 +2514,7 @@ document.getElementById('copyMobileBtn').addEventListener('click', () => copyFie
 document.getElementById('copyAadhaarBtn').addEventListener('click', () => copyFieldValue('applyAadhaar', 'Aadhaar'));
 document.getElementById('copyIfscBtn').addEventListener('click', () => copyFieldValue('applyIfsc', 'IFSC'));
 document.getElementById('downloadPacketBtn').addEventListener('click', downloadApplicationPacket);
+document.getElementById('guidedSubmissionBtn').addEventListener('click', openGuidedSubmissionWalkthrough);
 document.getElementById('openPortalBtn').addEventListener('click', openOfficialPortal);
 
 async function loadRejectionReasons() {
