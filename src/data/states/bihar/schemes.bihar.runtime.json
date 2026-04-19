@@ -1,0 +1,137 @@
+[
+  {
+    "id": "pm-kisan",
+    "name": { "English": "PM-KISAN", "Hindi": "पीएम-किसान" },
+    "scope": "central",
+    "state": "All",
+    "districts": [],
+    "blocks": [],
+    "crops": ["All"],
+    "farm_size": ["Below 2 acres", "2-5 acres", "Above 5 acres"],
+    "caste": ["General", "OBC", "SC", "ST"],
+    "gender": ["Male", "Female"],
+    "land_ownership": ["Owned", "Leased/Tenant"],
+    "bank_account_required": true,
+    "income_max": 600000,
+    "benefit": {
+      "English": "Income support of Rs. 6,000 per year in three installments.",
+      "Hindi": "आय सहायता के रूप में प्रति वर्ष 6,000 रुपये तीन किश्तों में।"
+    },
+    "apply": {
+      "English": "Apply via PM-KISAN portal or Common Service Center.",
+      "Hindi": "पीएम-किसान पोर्टल या जन सेवा केंद्र के माध्यम से आवेदन करें।"
+    },
+    "eligibility_note": {
+      "English": "Cultivator farmers, Direct Benefit Transfer (DBT) enabled bank account required.",
+      "Hindi": "कृषक किसानों हेतु, डायरेक्ट बेनिफिट ट्रांसफर (DBT) सक्षम बैंक खाता आवश्यक।"
+    },
+    "required_documents": ["Aadhaar", "Bank Passbook", "Land/Lease Proof"],
+    "required_documents_detailed": {
+      "English": [
+        "Aadhaar Card (clear front copy)",
+        "Bank Passbook first page (name, account number, IFSC visible)",
+        "Land ownership proof (Khata/Khatauni/Jamabandi/Patta)",
+        "Lease document (if tenant farmer)",
+        "Recent passport-size photograph"
+      ],
+      "Hindi": [
+        "आधार कार्ड (सामने की स्पष्ट प्रति)",
+        "बैंक पासबुक का पहला पेज (नाम, खाता संख्या, IFSC स्पष्ट हो)",
+        "भूमि स्वामित्व प्रमाण (खाता/खतियान/जमाबंदी/पट्टा)",
+        "पट्टा दस्तावेज (यदि बटाईदार/किरायेदार किसान हों)",
+        "हाल की पासपोर्ट आकार की तस्वीर"
+      ]
+    },
+    "verification_status": "verified"
+  },
+  {
+    "id": "bihar-mukhyamantri-kisan-yojana",
+    "name": { "English": "Bihar Mukhyamantri Kisan Yojana", "Hindi": "बिहार मुख्यमंत्री किसान योजना" },
+    "scope": "state",
+    "state": "Bihar",
+    "districts": [],
+    "blocks": [],
+    "crops": ["Rice", "Wheat", "Maize", "Pulses"],
+    "farm_size": ["Below 2 acres", "2-5 acres"],
+    "caste": ["General", "OBC", "SC", "ST"],
+    "gender": ["Male", "Female"],
+    "land_ownership": ["Owned"],
+    "bank_account_required": true,
+    "income_max": 500000,
+    "benefit": {
+      "English": "Financial assistance of Rs. 5,000 per acre for crop cultivation.",
+      "Hindi": "फसल खेती के लिए प्रति एकड़ 5,000 रुपये की आर्थिक मदद।"
+    },
+    "apply": {
+      "English": "Apply through Bihar Agriculture Department portal or local block office.",
+      "Hindi": "बिहार कृषि विभाग की वेबसाइट या स्थानीय प्रखंड कार्यालय के माध्यम से आवेदन करें।"
+    },
+    "eligibility_note": {
+      "English": "Small and marginal farmers with land ownership in Bihar.",
+      "Hindi": "बिहार में भूमि स्वामित्व वाले छोटे और सीमांत किसान।"
+    },
+    "required_documents": ["Aadhaar", "Bank Passbook", "Land Proof", "Crop Details"],
+    "required_documents_detailed": {
+      "English": [
+        "Aadhaar Card",
+        "Bank Passbook",
+        "Land ownership document",
+        "Crop cultivation details",
+        "Recent passport-size photograph"
+      ],
+      "Hindi": [
+        "आधार कार्ड",
+        "बैंक पासबुक",
+        "भूमि स्वामित्व दस्तावेज",
+        "फसल खेती विवरण",
+        "हाल की पासपोर्ट आकार की तस्वीर"
+      ]
+    },
+    "verification_status": "verified"
+  },
+  {
+    "id": "bihar-agricultural-road-development",
+    "name": { "English": "Bihar Agricultural Road Development Scheme", "Hindi": "बिहार कृषि सड़क विकास योजना" },
+    "scope": "state",
+    "state": "Bihar",
+    "districts": [],
+    "blocks": [],
+    "crops": ["All"],
+    "farm_size": ["Above 5 acres"],
+    "caste": ["General", "OBC", "SC", "ST"],
+    "gender": ["Male", "Female"],
+    "land_ownership": ["Owned"],
+    "bank_account_required": true,
+    "income_max": 1000000,
+    "benefit": {
+      "English": "Up to Rs. 10 lakh subsidy for developing agricultural roads and infrastructure.",
+      "Hindi": "कृषि सड़कों और बुनियादी ढांचे के विकास के लिए अधिकतम 10 लाख रुपये का अनुदान।"
+    },
+    "apply": {
+      "English": "Apply through Bihar Rural Development Department.",
+      "Hindi": "बिहार ग्रामीण विकास विभाग के माध्यम से आवेदन करें।"
+    },
+    "eligibility_note": {
+      "English": "Farmers with agricultural land requiring road connectivity.",
+      "Hindi": "सड़क कनेक्टिविटी की आवश्यकता वाले कृषि भूमि वाले किसान।"
+    },
+    "required_documents": ["Aadhaar", "Bank Passbook", "Land Proof", "Project Proposal"],
+    "required_documents_detailed": {
+      "English": [
+        "Aadhaar Card",
+        "Bank Passbook",
+        "Land ownership documents",
+        "Detailed project proposal",
+        "Recent passport-size photograph"
+      ],
+      "Hindi": [
+        "आधार कार्ड",
+        "बैंक पासबुक",
+        "भूमि स्वामित्व दस्तावेज",
+        "विस्तृत परियोजना प्रस्ताव",
+        "हाल की पासपोर्ट आकार की तस्वीर"
+      ]
+    },
+    "verification_status": "pending"
+  }
+]

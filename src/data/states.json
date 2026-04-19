@@ -1,0 +1,52 @@
+[
+  {
+    "code": "jharkhand",
+    "name": {
+      "English": "Jharkhand",
+      "Hindi": "झारखंड"
+    },
+    "capital": "Ranchi",
+    "language": "Hindi",
+    "hasData": true
+  },
+  {
+    "code": "bihar",
+    "name": {
+      "English": "Bihar",
+      "Hindi": "बिहार"
+    },
+    "capital": "Patna",
+    "language": "Hindi",
+    "hasData": false
+  },
+  {
+    "code": "west-bengal",
+    "name": {
+      "English": "West Bengal",
+      "Hindi": "पश्चिम बंगाल"
+    },
+    "capital": "Kolkata",
+    "language": "Bengali",
+    "hasData": false
+  },
+  {
+    "code": "odisha",
+    "name": {
+      "English": "Odisha",
+      "Hindi": "ओड़िशा"
+    },
+    "capital": "Bhubaneswar",
+    "language": "Odia",
+    "hasData": false
+  },
+  {
+    "code": "chhattisgarh",
+    "name": {
+      "English": "Chhattisgarh",
+      "Hindi": "छत्तीसगढ़"
+    },
+    "capital": "Raipur",
+    "language": "Hindi",
+    "hasData": false
+  }
+]

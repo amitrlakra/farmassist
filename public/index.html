@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FarmAssist Jharkhand Pilot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="alternate icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="hero">
+      <div class="lang-switcher">
+        <button class="lang-btn active" id="langBtnEn" onclick="switchLanguage('English')">English</button>
+        <button class="lang-btn" id="langBtnHi" onclick="switchLanguage('Hindi')">हिंदी</button>
+      </div>
+      <h1 id="title" data-i18n="title">FarmAssist Jharkhand Pilot</h1>
+      <p id="subtitle" data-i18n="subtitle">Verified scheme discovery for farmers (State + District)</p>
+    </div>
+
+    <div class="card">
+      <h2 style="margin-top: 0;" data-i18n="pmKisanHelpHeading">How this helps for scheme applications</h2>
+      <ul class="meta" style="margin: 6px 0 0; padding-left: 20px;">
+        <li data-i18n="pmKisanHelpPoint1">Find verified schemes using your profile and district.</li>
+        <li data-i18n="pmKisanHelpPoint2">Prepare key details: name, Aadhaar, mobile, bank account, IFSC, and land details.</li>
+        <li data-i18n="pmKisanHelpPoint3">Auto-extract details from uploaded Aadhaar and passbook where possible.</li>
+        <li data-i18n="pmKisanHelpPoint4">Open the official portal. This assistant tells you what information to fill and where to fill it, then you submit manually.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2 style="margin-top: 0;" data-i18n="pmKisanAccessHeading">How to access official scheme portals</h2>
+      <ul class="meta" style="margin: 6px 0 0; padding-left: 20px;">
+        <li data-i18n="pmKisanAccessPoint1">Open the official portal from each recommended scheme.</li>
+        <li data-i18n="pmKisanAccessPoint2">Keep Aadhaar, mobile number, bank account, IFSC, and land details ready.</li>
+        <li data-i18n="pmKisanAccessPoint3">Use the scheme-specific ID asked on the portal (registration number, mobile, Aadhaar, etc.).</li>
+        <li data-i18n="pmKisanAccessPoint4">Complete OTP/eKYC or portal verification steps if prompted.</li>
+        <li data-i18n="pmKisanAccessPoint5">Use extracted details from this assistant to fill fields correctly before final submit.</li>
+      </ul>
+      <p class="meta" style="margin-top: 8px;" data-i18n="pmKisanAccessNote">Note: Login and verification steps vary by scheme and portal.</p>
+    </div>
+
+    <div class="card">
+      <h2 style="margin-top: 0;" data-i18n="step1Heading">Step 1: Find Eligible Schemes</h2>
+      <p class="meta" style="margin-top: 4px;" data-i18n="step1Meta">Share only scheme-matching details first. Personal identity and documents are requested only when you choose to apply.</p>
+      <div class="grid">
+        <div style="display:none;"><label data-i18n="labelLanguage">Language</label><select id="language"><option>English</option><option>Hindi</option></select></div>
+        <div><label data-i18n="labelState">State</label><select id="state" required>
+          <option value="Jharkhand">Jharkhand</option>
+          <option value="Bihar">Bihar</option>
+        </select></div>
+        <div><label data-i18n="labelDistrict">District</label><select id="district"></select></div>
+        <div><label data-i18n="labelFarmSize">Farm Size</label><select id="farmSize"><option value="Below 2 acres">Below 2 acres</option><option value="2-5 acres">2-5 acres</option><option value="Above 5 acres">Above 5 acres</option></select></div>
+        <div><label data-i18n="labelCrop">Crop</label><select id="crop"><option value="Rice">Rice</option><option value="Wheat">Wheat</option><option value="Maize">Maize</option><option value="Pulses">Pulses</option><option value="Oilseeds">Oilseeds</option><option value="Cotton">Cotton</option><option value="Sugarcane">Sugarcane</option></select></div>
+        <div><label data-i18n="labelIncome">Income</label><select id="income"><option value="below_1_lakh">Below 1 lakh</option><option value="1_to_3_lakh">1-3 lakh</option><option value="3_to_6_lakh">3-6 lakh</option><option value="above_6_lakh">Above 6 lakh</option></select></div>
+        <div><label data-i18n="labelCaste">Caste</label><select id="caste"><option value="General">General</option><option value="OBC">OBC</option><option value="SC">SC</option><option value="ST">ST</option></select></div>
+        <div><label data-i18n="labelGender">Gender</label><select id="gender"><option value="Male">Male</option><option value="Female">Female</option></select></div>
+        <div><label data-i18n="labelLandOwnership">Land Ownership</label><select id="landOwnership"><option value="Owned">Owned</option><option value="Leased/Tenant">Leased/Tenant</option></select></div>
+        <div><label data-i18n="labelBankAccount">Bank Account</label><select id="bankAccount"><option value="yes">Yes</option><option value="no">No</option></select></div>
+        <div><label data-i18n="labelVerifiedOnly">Verified only</label><select id="verifiedOnly"><option value="true">Yes</option><option value="false">No</option></select></div>
+      </div>
+      <div style="margin-top:12px;"><button id="submitBtn" data-i18n="submitBtn">Get Verified Schemes</button></div>
+    </div>
+
+    <div class="results" id="results"></div>
+
+    <div class="card" id="applyAssistant" style="margin-top: 16px; display: none;">
+      <h2 style="margin-top: 0;" data-i18n="applyHeading">Apply Assistant</h2>
+      <p class="meta" id="applyIntro" data-i18n="applyIntro">Step 2: Fill personal details, upload supporting documents, extract Aadhaar if needed, then open the official portal and submit manually using prefilled details.</p>
+      <div id="applySchemeSummary" class="admin-item"></div>
+      <div class="grid" style="margin-top: 10px;">
+        <div>
+          <label data-i18n="labelApplyName">Applicant Name</label>
+          <div class="input-with-copy">
+            <input id="applyName" type="text" placeholder="Name for application" />
+            <button id="copyNameBtn" type="button" class="copy-btn" title="Copy Name">📋</button>
+          </div>
+        </div>
+        <div>
+          <label data-i18n="labelApplyMobile">Mobile Number</label>
+          <div class="input-with-copy">
+            <input id="applyMobile" type="tel" placeholder="Mobile for application" />
+            <button id="copyMobileBtn" type="button" class="copy-btn" title="Copy Mobile">📋</button>
+          </div>
+        </div>
+        <div>
+          <label data-i18n="labelApplyAadhaar">Aadhaar Number (Auto-detected or Manual)</label>
+          <div class="input-with-copy">
+            <input id="applyAadhaar" type="text" placeholder="Upload Aadhaar document to extract, or type manually" maxlength="14" />
+            <button id="copyAadhaarBtn" type="button" class="copy-btn" title="Copy Aadhaar">📋</button>
+          </div>
+          <div style="margin-top: 6px;"><span id="aadhaarStatusBadge" class="aadhaar-badge unknown">Unknown</span></div>
+        </div>
+        <div>
+          <label data-i18n="labelBankName">Bank Name (Auto-detected from Passbook)</label>
+          <input id="applyBankName" type="text" placeholder="Upload passbook to detect bank name" />
+        </div>
+        <div>
+          <label data-i18n="labelBankAccount2">Bank Account Number (Auto-detected or Manual)</label>
+          <div class="input-with-copy">
+            <input id="applyBankAccountNumber" type="text" placeholder="9-18 digits. Bank of India accounts are typically 14 digits." />
+            <span id="accountNumberWarning" style="color: #d9534f; margin-left: 8px; font-weight: bold; display: none;">⚠ Incomplete</span>
+          </div>
+          <small style="color: #666; display: block; margin-top: 4px;">If the extracted number seems short (less than 13 digits), verify against your passbook's first page and correct if needed.</small>
+        </div>
+        <div>
+          <label data-i18n="labelIfsc">IFSC Code (Auto-detected or Manual)</label>
+          <div class="input-with-copy">
+            <input id="applyIfsc" type="text" placeholder="11-character code e.g., BKID0123456. Auto-detect from passbook or enter manually." />
+            <button id="copyIfscBtn" type="button" class="copy-btn" title="Copy IFSC">📋</button>
+          </div>
+          <small style="color: #666; display: block; margin-top: 4px;">If auto-detection fails, find your IFSC code from your passbook's first page or <a href="https://www.upi-india.org/ifsc" target="_blank">lookup here</a></small>
+        </div>
+      </div>
+      <div style="margin-top: 10px;">
+        <label data-i18n="labelUploadDocs">Upload Documents (Aadhaar and Bank details are auto-extracted from these files)</label>
+        <input id="applicationDocs" type="file" multiple />
+      </div>
+      <div id="scannedDocsSummary" class="scan-summary"></div>
+      <div id="docChecklist" class="admin-list"></div>
+      <div class="admin-actions">
+        <button id="autoFillBtn" type="button" class="secondary" data-i18n="autoFillBtn">Auto Fill From Documents</button>
+        <button id="scanAadhaarBtn" type="button" class="secondary" data-i18n="scanAadhaarBtn">Scan Aadhaar from File</button>
+        <button id="openPortalBtn" type="button" data-i18n="openPortalBtn">Open Official Portal (Manual Submit)</button>
+        <button id="copyPrefillBtn" type="button" class="secondary" data-i18n="copyPrefillBtn">Copy Prefill Details</button>
+        <button id="downloadPacketBtn" type="button" class="secondary" data-i18n="downloadPacketBtn">Download Application Packet</button>
+      </div>
+    </div>
+
+
+  </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

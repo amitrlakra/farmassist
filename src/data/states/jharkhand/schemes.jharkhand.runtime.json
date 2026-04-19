@@ -1,0 +1,664 @@
+[
+  {
+    "id": "pm-kisan",
+    "name": {
+      "English": "PM-KISAN",
+      "Hindi": "पीएम-किसान"
+    },
+    "scope": "central",
+    "state": "All",
+    "districts": [],
+    "blocks": [],
+    "crops": [
+      "All"
+    ],
+    "farm_size": [
+      "Below 2 acres",
+      "2-5 acres",
+      "Above 5 acres"
+    ],
+    "caste": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "gender": [
+      "Male",
+      "Female"
+    ],
+    "land_ownership": [
+      "Owned",
+      "Leased/Tenant"
+    ],
+    "bank_account_required": true,
+    "income_max": 600000,
+    "benefit": {
+      "English": "Income support of Rs. 6,000 per year in three installments.",
+      "Hindi": "आय सहायता के रूप में प्रति वर्ष 6,000 रुपये तीन किश्तों में।"
+    },
+    "apply": {
+      "English": "Apply via PM-KISAN portal or Common Service Center.",
+      "Hindi": "पीएम-किसान पोर्टल या जन सेवा केंद्र के माध्यम से आवेदन करें।"
+    },
+    "eligibility_note": {
+      "English": "Cultivator farmers, Direct Benefit Transfer (DBT) enabled bank account required.",
+      "Hindi": "कृषक किसानों हेतु, डायरेक्ट बेनिफिट ट्रांसफर (DBT) सक्षम बैंक खाता आवश्यक।"
+    },
+    "required_documents": [
+      "Aadhaar",
+      "Bank Passbook",
+      "Land/Lease Proof"
+    ],
+    "required_documents_detailed": {
+      "English": [
+        "Aadhaar Card (clear front copy)",
+        "Bank Passbook first page (name, account number, IFSC visible)",
+        "Land ownership proof (Khata/Khatauni/Jamabandi/Patta)",
+        "Lease document (if tenant farmer)",
+        "Recent passport-size photograph"
+      ],
+      "Hindi": [
+        "आधार कार्ड (सामने की स्पष्ट प्रति)",
+        "बैंक पासबुक का पहला पेज (नाम, खाता संख्या, IFSC स्पष्ट हो)",
+        "भूमि स्वामित्व प्रमाण (खाता/खतियान/जमाबंदी/पट्टा)",
+        "पट्टा दस्तावेज (यदि बटाईदार/किरायेदार किसान हों)",
+        "हाल की पासपोर्ट आकार की तस्वीर"
+      ]
+    },
+    "required_information_required": {
+      "English": [
+        "Applicant full name as per Aadhaar",
+        "Aadhaar number",
+        "Mobile number linked to Aadhaar",
+        "Bank account number",
+        "IFSC code",
+        "State, district, block",
+        "Landholding details"
+      ],
+      "Hindi": [
+        "आधार के अनुसार आवेदक का पूरा नाम",
+        "आधार संख्या",
+        "आधार से जुड़ा मोबाइल नंबर",
+        "बैंक खाता संख्या",
+        "IFSC कोड",
+        "राज्य, जिला, प्रखंड",
+        "भूमि जोत का विवरण"
+      ]
+    },
+    "source_url": "https://pmkisan.gov.in/",
+    "source_type": "official",
+    "verification_status": "verified",
+    "verified_on": "2026-04-01",
+    "verified_by": "Founding Team"
+  },
+  {
+    "id": "pmfby",
+    "name": {
+      "English": "Pradhan Mantri Fasal Bima Yojana",
+      "Hindi": "प्रधानमंत्री फसल बीमा योजना"
+    },
+    "scope": "central",
+    "state": "All",
+    "districts": [],
+    "blocks": [],
+    "crops": [
+      "Rice",
+      "Wheat",
+      "Maize",
+      "Pulses",
+      "Oilseeds",
+      "Cotton",
+      "Sugarcane"
+    ],
+    "farm_size": [
+      "Below 2 acres",
+      "2-5 acres",
+      "Above 5 acres"
+    ],
+    "caste": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "gender": [
+      "Male",
+      "Female"
+    ],
+    "land_ownership": [
+      "Owned",
+      "Leased/Tenant"
+    ],
+    "bank_account_required": true,
+    "income_max": null,
+    "benefit": {
+      "English": "Crop insurance against notified risks and disasters.",
+      "Hindi": "अधिसूचित जोखिमों और आपदाओं के खिलाफ फसल बीमा सुरक्षा।"
+    },
+    "apply": {
+      "English": "Apply via PMFBY portal, bank branch, or authorized channel.",
+      "Hindi": "पीएमएफबीवाई पोर्टल, बैंक शाखा या अधिकृत माध्यम से आवेदन करें।"
+    },
+    "eligibility_note": {
+      "English": "Farmers cultivating notified crops in notified areas.",
+      "Hindi": "अधिसूचित क्षेत्र में अधिसूचित फसल उगाने वाले किसान।"
+    },
+    "required_documents": [
+      "Aadhaar",
+      "Bank Passbook",
+      "Sowing/Crop Details",
+      "Land/Lease Proof"
+    ],
+    "required_documents_detailed": {
+      "English": [
+        "Aadhaar Card",
+        "Bank Passbook first page",
+        "Land ownership/lease proof",
+        "Sowing certificate or crop declaration",
+        "Enrollment/application form as notified by state",
+        "Passport-size photograph"
+      ],
+      "Hindi": [
+        "आधार कार्ड",
+        "बैंक पासबुक का पहला पेज",
+        "भूमि स्वामित्व/पट्टा प्रमाण",
+        "बुवाई प्रमाणपत्र या फसल घोषणा",
+        "राज्य अधिसूचना अनुसार पंजीकरण/आवेदन प्रपत्र",
+        "पासपोर्ट आकार फोटो"
+      ]
+    },
+    "required_information_required": {
+      "English": [
+        "Farmer name",
+        "Aadhaar number",
+        "Bank account and IFSC",
+        "Crop name and season",
+        "Sown area/acreage",
+        "District and block",
+        "Land details (owned or tenant)"
+      ],
+      "Hindi": [
+        "किसान का नाम",
+        "आधार संख्या",
+        "बैंक खाता और IFSC",
+        "फसल का नाम और मौसम",
+        "बुआई का क्षेत्रफल (एकड़ में)",
+        "जिला और प्रखंड",
+        "भूमि विवरण (स्वामित्व या किरायेदारी)"
+      ]
+    },
+    "source_url": "https://pmfby.gov.in/",
+    "source_type": "official",
+    "verification_status": "verified",
+    "verified_on": "2026-04-01",
+    "verified_by": "Founding Team"
+  },
+  {
+    "id": "rkvy",
+    "name": {
+      "English": "Rashtriya Krishi Vikas Yojana",
+      "Hindi": "राष्ट्रीय कृषि विकास योजना"
+    },
+    "scope": "state",
+    "state": "Jharkhand",
+    "districts": [],
+    "blocks": [],
+    "crops": [
+      "All"
+    ],
+    "farm_size": [
+      "Below 2 acres",
+      "2-5 acres",
+      "Above 5 acres"
+    ],
+    "caste": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "gender": [
+      "Male",
+      "Female"
+    ],
+    "land_ownership": [
+      "Owned",
+      "Leased/Tenant"
+    ],
+    "bank_account_required": true,
+    "income_max": null,
+    "benefit": {
+      "English": "Support for state agriculture projects and productivity enhancement.",
+      "Hindi": "राज्य कृषि परियोजनाओं और उत्पादकता वृद्धि के लिए सहायता।"
+    },
+    "apply": {
+      "English": "Apply through district agriculture office as per state notification.",
+      "Hindi": "राज्य अधिसूचना के अनुसार जिला कृषि कार्यालय के माध्यम से आवेदन करें।"
+    },
+    "eligibility_note": {
+      "English": "Eligibility varies by component and state implementation plan.",
+      "Hindi": "पात्रता योजना घटक और राज्य कार्यान्वयन योजना के अनुसार बदलती है।"
+    },
+    "required_documents": [
+      "Identity Proof",
+      "Bank Passbook",
+      "Land/Lease Proof"
+    ],
+    "required_documents_detailed": {
+      "English": [
+        "Identity proof (Aadhaar/Voter ID/other accepted ID)",
+        "Address proof (if required by district office)",
+        "Bank Passbook first page",
+        "Land/lease proof",
+        "Project/component-specific supporting estimate or quotation",
+        "Recent passport-size photograph"
+      ],
+      "Hindi": [
+        "पहचान प्रमाण (आधार/वोटर आईडी/अन्य मान्य आईडी)",
+        "पता प्रमाण (यदि जिला कार्यालय मांगे)",
+        "बैंक पासबुक का पहला पेज",
+        "भूमि/पट्टा प्रमाण",
+        "परियोजना/घटक संबंधित अनुमान या कोटेशन",
+        "हाल की पासपोर्ट आकार की तस्वीर"
+      ]
+    },
+    "required_information_required": {
+      "English": [
+        "Applicant name",
+        "Contact number",
+        "Bank account details",
+        "Land details",
+        "Project/component requested",
+        "District and block"
+      ],
+      "Hindi": [
+        "आवेदक का नाम",
+        "संपर्क नंबर",
+        "बैंक खाता विवरण",
+        "भूमि विवरण",
+        "मांगा गया परियोजना/घटक",
+        "जिला और प्रखंड"
+      ]
+    },
+    "source_url": "https://rkvy.da.gov.in/",
+    "source_type": "official",
+    "verification_status": "verified",
+    "verified_on": "2026-04-01",
+    "verified_by": "Founding Team"
+  },
+  {
+    "id": "jh-district-input-subsidy-template",
+    "name": {
+      "English": "District Input Subsidy (Template)",
+      "Hindi": "जिला कृषि सामग्री अनुदान (नमूना)"
+    },
+    "scope": "district",
+    "state": "Jharkhand",
+    "districts": [
+      "Ranchi"
+    ],
+    "blocks": [
+      "Kanke",
+      "Namkum"
+    ],
+    "crops": [
+      "Rice",
+      "Wheat"
+    ],
+    "farm_size": [
+      "Below 2 acres",
+      "2-5 acres"
+    ],
+    "caste": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "gender": [
+      "Male",
+      "Female"
+    ],
+    "land_ownership": [
+      "Owned",
+      "Leased/Tenant"
+    ],
+    "bank_account_required": true,
+    "income_max": 300000,
+    "benefit": {
+      "English": "District-level support as per local notification.",
+      "Hindi": "स्थानीय अधिसूचना के अनुसार जिला स्तर की सहायता।"
+    },
+    "apply": {
+      "English": "Apply through block agriculture office with district circular reference.",
+      "Hindi": "जिला परिपत्र संदर्भ के साथ प्रखंड कृषि कार्यालय में आवेदन करें।"
+    },
+    "eligibility_note": {
+      "English": "This row is a template. Replace with real district circular details before production.",
+      "Hindi": "यह प्रविष्टि टेम्पलेट है। उत्पादन से पहले वास्तविक जिला परिपत्र विवरण जोड़ें।"
+    },
+    "required_documents": [
+      "Identity Proof",
+      "Bank Passbook",
+      "Land/Lease Proof",
+      "District Circular Ref"
+    ],
+    "required_documents_detailed": {
+      "English": [
+        "Identity proof",
+        "Bank Passbook first page",
+        "Land/lease proof",
+        "Copy of applicable district circular/notification",
+        "Local office application form",
+        "Recent passport-size photograph"
+      ],
+      "Hindi": [
+        "पहचान प्रमाण",
+        "बैंक पासबुक का पहला पेज",
+        "भूमि/पट्टा प्रमाण",
+        "लागू जिला परिपत्र/अधिसूचना की प्रति",
+        "स्थानीय कार्यालय का आवेदन प्रपत्र",
+        "हाल की पासपोर्ट आकार की तस्वीर"
+      ]
+    },
+    "required_information_required": {
+      "English": [
+        "Applicant identity details",
+        "District, block, village",
+        "Bank account and IFSC",
+        "Land/crop details",
+        "Reference number/date of district circular"
+      ],
+      "Hindi": [
+        "आवेदक पहचान विवरण",
+        "जिला, प्रखंड, गांव",
+        "बैंक खाता और IFSC",
+        "भूमि/फसल विवरण",
+        "जिला परिपत्र का संदर्भ संख्या/तारीख"
+      ]
+    },
+    "source_url": "https://www.jharkhand.gov.in/",
+    "source_type": "official",
+    "verification_status": "verified",
+    "verified_on": "2026-04-04",
+    "verified_by": "Admin",
+    "verification_notes": "",
+    "rejection_reason": null
+  },
+  {
+    "id": "pmksy-per-drop-more-crop",
+    "name": {
+      "English": "PMKSY - Per Drop More Crop",
+      "Hindi": "पीएमकेएसवाई - प्रति बूंद अधिक फसल"
+    },
+    "scope": "central",
+    "state": "All",
+    "districts": [],
+    "blocks": [],
+    "crops": [
+      "All"
+    ],
+    "farm_size": [
+      "Below 2 acres",
+      "2-5 acres",
+      "Above 5 acres"
+    ],
+    "caste": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "gender": [
+      "Male",
+      "Female"
+    ],
+    "land_ownership": [
+      "Owned",
+      "Leased/Tenant"
+    ],
+    "bank_account_required": true,
+    "income_max": null,
+    "benefit": {
+      "English": "Support for micro-irrigation systems such as drip and sprinkler under PMKSY components.",
+      "Hindi": "पीएमकेएसवाई घटकों के तहत ड्रिप और स्प्रिंकलर जैसी सूक्ष्म सिंचाई प्रणालियों के लिए सहायता।"
+    },
+    "apply": {
+      "English": "Apply through the state agriculture/horticulture department as per PMKSY implementation guidelines.",
+      "Hindi": "पीएमकेएसवाई क्रियान्वयन दिशा-निर्देशों के अनुसार राज्य कृषि/उद्यान विभाग के माध्यम से आवेदन करें।"
+    },
+    "eligibility_note": {
+      "English": "Eligibility and subsidy rates vary by state component and beneficiary category.",
+      "Hindi": "पात्रता और अनुदान की दरें राज्य घटक और लाभार्थी श्रेणी के अनुसार बदलती हैं।"
+    },
+    "required_documents": [
+      "Identity Proof",
+      "Bank Passbook",
+      "Land/Lease Proof",
+      "Irrigation Layout/Estimate"
+    ],
+    "required_documents_detailed": {
+      "English": [
+        "Identity proof (Aadhaar or accepted government ID)",
+        "Bank passbook first page",
+        "Land ownership/lease proof",
+        "Irrigation layout plan and vendor estimate",
+        "Photograph of field (if required by district)",
+        "Application form as per state PMKSY process"
+      ],
+      "Hindi": [
+        "पहचान प्रमाण (आधार या मान्य सरकारी आईडी)",
+        "बैंक पासबुक का पहला पेज",
+        "भूमि स्वामित्व/पट्टा प्रमाण",
+        "सिंचाई का नक्शा व योजना और विक्रेता का अनुमान",
+        "खेत का फोटो (यदि जिला स्तर पर आवश्यक हो)",
+        "राज्य पीएमकेएसवाई प्रक्रिया के अनुसार आवेदन प्रपत्र"
+      ]
+    },
+    "required_information_required": {
+      "English": [
+        "Applicant details",
+        "Bank account and IFSC",
+        "Land survey/plot details",
+        "Crop type",
+        "Proposed irrigation system type and area",
+        "District and block"
+      ],
+      "Hindi": [
+        "आवेदक विवरण",
+        "बैंक खाता और IFSC",
+        "भूमि सर्वे/खसरा विवरण",
+        "फसल प्रकार",
+        "प्रस्तावित सिंचाई प्रणाली का प्रकार और क्षेत्र",
+        "जिला और प्रखंड"
+      ]
+    },
+    "source_url": "https://pmksy.gov.in/",
+    "source_type": "official",
+    "verification_status": "pending",
+    "verified_on": null,
+    "verified_by": null
+  },
+  {
+    "id": "soil-health-card",
+    "name": {
+      "English": "Soil Health Card Scheme",
+      "Hindi": "मृदा स्वास्थ्य कार्ड योजना"
+    },
+    "scope": "central",
+    "state": "All",
+    "districts": [],
+    "blocks": [],
+    "crops": [
+      "All"
+    ],
+    "farm_size": [
+      "Below 2 acres",
+      "2-5 acres",
+      "Above 5 acres"
+    ],
+    "caste": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "gender": [
+      "Male",
+      "Female"
+    ],
+    "land_ownership": [
+      "Owned",
+      "Leased/Tenant"
+    ],
+    "bank_account_required": false,
+    "income_max": null,
+    "benefit": {
+      "English": "Provides soil test based nutrient recommendations through Soil Health Cards.",
+      "Hindi": "मृदा परीक्षण आधारित पोषक तत्व अनुशंसाएं मृदा स्वास्थ्य कार्ड के माध्यम से प्रदान की जाती हैं।"
+    },
+    "apply": {
+      "English": "Apply through local agriculture office/soil testing lab as per state process.",
+      "Hindi": "राज्य प्रक्रिया के अनुसार स्थानीय कृषि कार्यालय/मृदा परीक्षण प्रयोगशाला के माध्यम से आवेदन करें।"
+    },
+    "eligibility_note": {
+      "English": "Farmers can receive periodic soil testing and recommendations for better input use.",
+      "Hindi": "किसानों को बेहतर खाद-उर्वरक उपयोग के लिए समय-समय पर मृदा परीक्षण और अनुशंसाएं मिलती हैं।"
+    },
+    "required_documents": [
+      "Identity Proof",
+      "Land/Lease Proof",
+      "Mobile Number"
+    ],
+    "required_documents_detailed": {
+      "English": [
+        "Identity proof",
+        "Land ownership/lease proof",
+        "Farmer registration slip (if applicable)",
+        "Previous soil health card (if available)",
+        "Mobile number proof/contact record"
+      ],
+      "Hindi": [
+        "पहचान प्रमाण",
+        "भूमि स्वामित्व/पट्टा प्रमाण",
+        "किसान पंजीकरण पर्ची (यदि लागू हो)",
+        "पूर्व मृदा स्वास्थ्य कार्ड (यदि उपलब्ध हो)",
+        "मोबाइल नंबर विवरण"
+      ]
+    },
+    "required_information_required": {
+      "English": [
+        "Farmer name",
+        "Village and land plot details",
+        "Crop pattern",
+        "Contact number",
+        "Sample collection details"
+      ],
+      "Hindi": [
+        "किसान का नाम",
+        "गांव और खसरा/भूखंड विवरण",
+        "फसल चक्र/फसल का ढंग",
+        "संपर्क नंबर",
+        "नमूना संग्रह विवरण"
+      ]
+    },
+    "source_url": "https://soilhealth.dac.gov.in/",
+    "source_type": "official",
+    "verification_status": "pending",
+    "verified_on": null,
+    "verified_by": null
+  },
+  {
+    "id": "agri-infra-fund",
+    "name": {
+      "English": "Agriculture Infrastructure Fund",
+      "Hindi": "कृषि अवसंरचना निधि"
+    },
+    "scope": "central",
+    "state": "All",
+    "districts": [],
+    "blocks": [],
+    "crops": [
+      "All"
+    ],
+    "farm_size": [
+      "Below 2 acres",
+      "2-5 acres",
+      "Above 5 acres"
+    ],
+    "caste": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "gender": [
+      "Male",
+      "Female"
+    ],
+    "land_ownership": [
+      "Owned",
+      "Leased/Tenant"
+    ],
+    "bank_account_required": true,
+    "income_max": null,
+    "benefit": {
+      "English": "Interest subvention and credit support for post-harvest management and community farming assets.",
+      "Hindi": "फसल कटाई उपरांत प्रबंधन और सामुदायिक कृषि परिसंपत्तियों के लिए ब्याज सहायता और ऋण समर्थन।"
+    },
+    "apply": {
+      "English": "Apply through the Agriculture Infrastructure Fund portal and participating lending institutions.",
+      "Hindi": "कृषि अवसंरचना निधि की वेबसाइट और सहभागी बैंकों के माध्यम से आवेदन करें।"
+    },
+    "eligibility_note": {
+      "English": "Primarily for eligible entities including FPOs, PACS, agri-entrepreneurs and related stakeholders.",
+      "Hindi": "मुख्यतः किसान उत्पादक संगठन (FPO), प्राथमिक कृषि सहकारी समितियाँ (PACS), कृषि उद्यमियों और संबंधित पात्र संस्थाओं के लिए।"
+    },
+    "required_documents": [
+      "Identity Proof",
+      "Bank Passbook",
+      "Project Report",
+      "Land/Lease Proof"
+    ],
+    "required_documents_detailed": {
+      "English": [
+        "Identity and entity registration proof",
+        "Bank passbook/account details",
+        "Detailed project report",
+        "Land ownership/lease/consent documents",
+        "Quotations and cost estimates",
+        "Any lender-required financial statements"
+      ],
+      "Hindi": [
+        "पहचान और इकाई पंजीकरण प्रमाण",
+        "बैंक पासबुक/खाता विवरण",
+        "विस्तृत परियोजना प्रतिवेदन",
+        "भूमि स्वामित्व/पट्टा/सहमति दस्तावेज",
+        "मूल्य-उद्धरण और लागत का अनुमान",
+        "ऋणदाता द्वारा मांगे गए वित्तीय विवरण"
+      ]
+    },
+    "required_information_required": {
+      "English": [
+        "Applicant/entity details",
+        "Project location and capacity",
+        "Estimated cost and financing pattern",
+        "Bank and IFSC details",
+        "Implementation timeline"
+      ],
+      "Hindi": [
+        "आवेदक/इकाई विवरण",
+        "परियोजना स्थान और क्षमता",
+        "अनुमानित लागत और वित्त-प्रबंध",
+        "बैंक और IFSC विवरण",
+        "कार्यान्वयन की समय-सीमा"
+      ]
+    },
+    "source_url": "https://agriinfra.dac.gov.in/",
+    "source_type": "official",
+    "verification_status": "pending",
+    "verified_on": null,
+    "verified_by": null
+  }
+]

@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: farmassist-jharkhand-pilot
+    runtime: node
+    rootDir: farmassist
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DEFAULT_LANGUAGE
+        value: English
+      - key: DEFAULT_STATE
+        value: Jharkhand
+      - key: VERIFIED_ONLY
+        value: "true"
+      - key: STRICT_VERIFIED_MODE
+        value: "true"
+      - key: ADMIN_KEY
+        generateValue: true
+      - key: ADMIN_USERS_JSON
+        value: '[{"id":"admin-1","name":"Program Admin","role":"superadmin","key":"replace-superadmin-key"},{"id":"admin-2","name":"District Reviewer","role":"reviewer","key":"replace-reviewer-key"},{"id":"admin-3","name":"Audit Officer","role":"auditor","key":"replace-auditor-key"}]'
+      - key: LLM_AADHAAR_FALLBACK
+        value: "false"
+      - key: LLM_AADHAAR_API_URL
+        value: https://api.openai.com/v1/chat/completions
+      - key: LLM_AADHAAR_API_KEY
+        sync: false
+      - key: LLM_AADHAAR_MODEL
+        value: gpt-4.1-mini
+      - key: LLM_AADHAAR_TIMEOUT_MS
+        value: "12000"

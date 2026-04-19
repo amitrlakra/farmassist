@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FarmAssist Admin — Scheme Verification</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .admin-page-hero {
+      background: linear-gradient(135deg, #1e3a5f, #1d4ed8);
+    }
+    .admin-nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      padding: 6px 12px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+    .admin-nav-back:hover { background: rgba(255,255,255,0.25); }
+    .admin-header-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 6px;
+      flex-wrap: wrap;
+    }
+    .admin-status-badge {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+    }
+    .admin-status-badge.authenticated {
+      background: #16a34a;
+    }
+    .admin-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: 2px solid #cbd5e1;
+      background: #fff;
+      color: #374151;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+      width: auto;
+    }
+    .tab-btn:hover { background: #f1f5f9; border-color: #1d4ed8; color: #1d4ed8; }
+    .tab-btn.active {
+      background: #1d4ed8;
+      color: #fff;
+      border-color: #1d4ed8;
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .stat-card {
+      background: #fff;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 32px;
+      font-weight: 800;
+      color: #1d4ed8;
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 13px;
+      color: #64748b;
+      margin-top: 6px;
+      font-weight: 600;
+    }
+    .stat-card.verified .stat-number { color: #16a34a; }
+    .stat-card.pending .stat-number { color: #d97706; }
+    .stat-card.rejected .stat-number { color: #dc2626; }
+    .filter-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      align-items: flex-end;
+    }
+    .filter-bar select, .filter-bar input {
+      width: auto;
+      padding: 8px 12px;
+      font-size: 14px;
+    }
+    .filter-bar button {
+      width: auto;
+      padding: 8px 16px;
+      font-size: 14px;
+      background: #1d4ed8;
+    }
+    .filter-bar button:hover { background: #1e40af; }
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    .admin-table th {
+      background: #f8fafc;
+      padding: 10px 12px;
+      text-align: left;
+      font-weight: 700;
+      color: #374151;
+      border-bottom: 2px solid #e2e8f0;
+    }
+    .admin-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #f1f5f9;
+      vertical-align: top;
+    }
+    .admin-table tr:hover td { background: #f8fafc; }
+    .scheme-name-cell { font-weight: 600; color: #1e293b; }
+    .scope-pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      background: #e0e7ff;
+      color: #3730a3;
+    }
+    .scope-pill.central { background: #dbeafe; color: #1e40af; }
+    .scope-pill.state { background: #dcfce7; color: #15803d; }
+    .scope-pill.district { background: #fef9c3; color: #854d0e; }
+    .scope-pill.block { background: #fce7f3; color: #9d174d; }
+    .decision-form {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      margin-top: 8px;
+    }
+    .decision-form select, .decision-form input {
+      width: auto;
+      padding: 6px 10px;
+      font-size: 13px;
+    }
+    .decision-form button {
+      width: auto;
+      padding: 6px 14px;
+      font-size: 13px;
+      background: #1d4ed8;
+    }
+    .decision-form button:hover { background: #1e40af; }
+    .decision-form button.danger { background: #dc2626; }
+    .decision-form button.danger:hover { background: #b91c1c; }
+    .reason-row { display: none; margin-top: 6px; }
+    .reason-row.visible { display: flex; gap: 6px; flex-wrap: wrap; }
+    .notes-row { margin-top: 6px; }
+    .notes-row input { font-size: 13px; padding: 6px 10px; }
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: #94a3b8;
+      font-size: 15px;
+    }
+    .audit-row td { font-size: 13px; }
+    .audit-change {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      font-size: 12px;
+    }
+    .arrow { color: #94a3b8; }
+    .timestamp { color: #64748b; font-size: 12px; }
+    .login-card {
+      max-width: 420px;
+      margin: 40px auto;
+    }
+    .login-card button {
+      background: #1d4ed8;
+      margin-top: 8px;
+    }
+    .login-card button:hover { background: #1e40af; }
+    .alert {
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+    .alert.error { background: #fef2f2; border: 1px solid #fca5a5; color: #b91c1c; }
+    .alert.success { background: #f0fdf4; border: 1px solid #86efac; color: #15803d; }
+    .alert.info { background: #eff6ff; border: 1px solid #93c5fd; color: #1e40af; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="hero admin-page-hero">
+      <a href="/" class="admin-nav-back">← Back to Farmer Portal</a>
+      <h1 style="margin: 0;">FarmAssist Admin</h1>
+      <p style="margin: 4px 0 0; opacity: 0.85;">Scheme Verification & Audit Console — Jharkhand Pilot</p>
+      <div class="admin-header-meta">
+        <span id="authBadge" class="admin-status-badge">Not Authenticated</span>
+        <span id="adminNameDisplay" style="color: rgba(255,255,255,0.8); font-size: 13px;"></span>
+      </div>
+    </div>
+
+    <!-- Login Card (shown when not authenticated) -->
+    <div id="loginSection" class="card login-card">
+      <h2 style="margin-top: 0;">Admin Login</h2>
+      <p class="meta">Enter your admin key to access the verification console.</p>
+      <div id="loginAlert"></div>
+      <div style="margin-bottom: 12px;">
+        <label>Admin Key</label>
+        <input id="adminKey" type="password" placeholder="Enter your admin key" />
+      </div>
+      <div style="margin-bottom: 12px;">
+        <label>Your Name</label>
+        <input id="reviewerName" type="text" placeholder="e.g. District Verification Officer" />
+      </div>
+      <button id="loginBtn">Login</button>
+      <div class="card" style="margin-top: 16px; background: #f8fafc; border: 1px solid #e2e8f0;">
+        <strong style="font-size: 13px;">Role Access Guide</strong>
+        <div style="margin-top: 8px; display: grid; gap: 6px; font-size: 13px;">
+          <div><strong>Superadmin</strong>: Queue, Decisions, Audit, CSV Exports</div>
+          <div><strong>Reviewer</strong>: Queue, Decisions, Audit, CSV Exports</div>
+          <div><strong>Auditor</strong>: Audit, Audit CSV only</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Admin Console (shown after authentication) -->
+    <div id="adminConsole" style="display: none;">
+      <!-- Stats -->
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card"><div class="stat-number" id="statTotal">—</div><div class="stat-label">Total Schemes</div></div>
+        <div class="stat-card verified"><div class="stat-number" id="statVerified">—</div><div class="stat-label">Verified</div></div>
+        <div class="stat-card pending"><div class="stat-number" id="statPending">—</div><div class="stat-label">Pending</div></div>
+        <div class="stat-card rejected"><div class="stat-number" id="statRejected">—</div><div class="stat-label">Rejected</div></div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="admin-tabs">
+        <button class="tab-btn active" data-tab="queue">Verification Queue</button>
+        <button class="tab-btn" data-tab="audit">Audit Log</button>
+        <button class="tab-btn" data-tab="exports">Exports</button>
+      </div>
+
+      <!-- Queue Tab -->
+      <div id="tab-queue" class="tab-panel active">
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+            <h2 style="margin: 0;">Verification Queue</h2>
+            <button id="refreshQueueBtn" style="width: auto; padding: 8px 16px; font-size: 14px; background: #1d4ed8;">↻ Refresh</button>
+          </div>
+          <div class="filter-bar">
+            <div>
+              <label style="margin-bottom: 4px; font-size: 12px;">Filter by Status</label>
+              <select id="queueStatusFilter">
+                <option value="all">All (Non-verified)</option>
+                <option value="pending">Pending</option>
+                <option value="rejected">Rejected</option>
+              </select>
+            </div>
+            <div>
+              <label style="margin-bottom: 4px; font-size: 12px;">Search</label>
+              <input id="queueSearch" type="text" placeholder="Search scheme name..." style="min-width: 200px;" />
+            </div>
+            <button id="applyQueueFilterBtn">Apply</button>
+          </div>
+          <div id="queueAlert"></div>
+          <div id="queueTableWrap" style="overflow-x: auto;">
+            <div class="empty-state">Click Refresh to load the verification queue.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Audit Log Tab -->
+      <div id="tab-audit" class="tab-panel">
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+            <h2 style="margin: 0;">Audit Log</h2>
+            <button id="refreshAuditBtn" style="width: auto; padding: 8px 16px; font-size: 14px; background: #1d4ed8;">↻ Refresh</button>
+          </div>
+          <div id="auditAlert"></div>
+          <div id="auditTableWrap" style="overflow-x: auto;">
+            <div class="empty-state">Click Refresh to load audit history.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Exports Tab -->
+      <div id="tab-exports" class="tab-panel">
+        <div class="card">
+          <h2 style="margin-top: 0;">CSV Exports</h2>
+          <p class="meta">Download scheme data and audit history as CSV files.</p>
+          <div style="display: grid; gap: 12px; max-width: 400px;">
+            <div>
+              <strong style="display: block; margin-bottom: 6px;">Verification Queue</strong>
+              <p class="meta" style="margin: 0 0 8px;">All non-verified schemes with current status.</p>
+              <button id="downloadQueueCsvBtn" style="width: auto; padding: 10px 20px; background: #1d4ed8;">Download Queue CSV</button>
+            </div>
+            <hr style="border: none; border-top: 1px solid #e2e8f0;" />
+            <div>
+              <strong style="display: block; margin-bottom: 6px;">Audit Log</strong>
+              <p class="meta" style="margin: 0 0 8px;">Full history of all verification decisions.</p>
+              <button id="downloadAuditCsvBtn" style="width: auto; padding: 10px 20px; background: #1d4ed8;">Download Audit CSV</button>
+            </div>
+          </div>
+          <div id="exportAlert" style="margin-top: 12px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

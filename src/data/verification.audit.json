@@ -1,0 +1,61 @@
+[
+  {
+    "ts": "2026-04-04T17:29:36.451Z",
+    "scheme_id": "jh-district-input-subsidy-template",
+    "before": "pending",
+    "after": "verified",
+    "reviewer": "QA",
+    "notes": "validated source"
+  },
+  {
+    "ts": "2026-04-04T17:29:45.974Z",
+    "scheme_id": "jh-district-input-subsidy-template",
+    "before": "verified",
+    "after": "pending",
+    "reviewer": "QA",
+    "notes": "reset after endpoint test"
+  },
+  {
+    "ts": "2026-04-04T17:34:51.314Z",
+    "scheme_id": "jh-district-input-subsidy-template",
+    "before": "pending",
+    "after": "rejected",
+    "reviewer": "RoleCheck",
+    "notes": "role test"
+  },
+  {
+    "ts": "2026-04-04T17:34:56.961Z",
+    "scheme_id": "jh-district-input-subsidy-template",
+    "before": "rejected",
+    "after": "pending",
+    "reviewer": "QA",
+    "notes": "reset after role tests"
+  },
+  {
+    "ts": "2026-04-04T17:42:58.996Z",
+    "scheme_id": "jh-district-input-subsidy-template",
+    "before": "pending",
+    "after": "rejected",
+    "reviewer": "QA",
+    "notes": "expired circular",
+    "reason_code": "expired_scheme"
+  },
+  {
+    "ts": "2026-04-04T17:43:08.636Z",
+    "scheme_id": "jh-district-input-subsidy-template",
+    "before": "rejected",
+    "after": "pending",
+    "reviewer": "QA",
+    "notes": "reset after rejection reason tests",
+    "reason_code": null
+  },
+  {
+    "ts": "2026-04-04T17:50:49.258Z",
+    "scheme_id": "jh-district-input-subsidy-template",
+    "before": "pending",
+    "after": "verified",
+    "reviewer": "Admin",
+    "notes": "",
+    "reason_code": null
+  }
+]

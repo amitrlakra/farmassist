@@ -1,0 +1,16 @@
+{
+  "state": "Bihar",
+  "districts": [
+    { "name": "Patna", "blocks": ["Patna Sadar", "Danapur", "Paliganj"] },
+    { "name": "Nalanda", "blocks": ["Hilsa", "Islampur", "Rajgir"] },
+    { "name": "Gaya", "blocks": ["Gaya Town", "Belaganj", "Sherghati"] },
+    { "name": "Muzaffarpur", "blocks": ["Muzaffarpur Sadar", "Minapur", "Kanti"] },
+    { "name": "Darbhanga", "blocks": ["Darbhanga Sadar", "Bahadurpur", "Keotiranway"] },
+    { "name": "Bhagalpur", "blocks": ["Bhagalpur Sadar", "Sabour", "Kharik"] },
+    { "name": "Purnia", "blocks": ["Purnia East", "Purnia West", "Banmankhi"] },
+    { "name": "Munger", "blocks": ["Munger Sadar", "Sangrampur", "Tarapur"] },
+    { "name": "Begusarai", "blocks": ["Begusarai", "Teghra", "Matihani"] },
+    { "name": "Khagaria", "blocks": ["Khagaria", "Alauli", "Chautham"] }
+  ],
+  "note": "Sample districts and blocks for Bihar. Expand with complete LGD data for production use."
+}

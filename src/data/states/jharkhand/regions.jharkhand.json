@@ -1,0 +1,30 @@
+{
+  "state": "Jharkhand",
+  "districts": [
+    { "name": "Bokaro", "blocks": ["Bermo", "Chas", "Chandankiyari"] },
+    { "name": "Chatra", "blocks": ["Chatra", "Hunterganj", "Simaria"] },
+    { "name": "Deoghar", "blocks": ["Deoghar", "Madhupur", "Mohanpur"] },
+    { "name": "Dhanbad", "blocks": ["Baghmara", "Baliapur", "Topchanchi"] },
+    { "name": "Dumka", "blocks": ["Dumka", "Jama", "Jarmundi"] },
+    { "name": "East Singhbhum", "blocks": ["Golmuri-cum-Jugsalai", "Patamda", "Potka"] },
+    { "name": "Garhwa", "blocks": ["Garhwa", "Meral", "Ranka"] },
+    { "name": "Giridih", "blocks": ["Giridih", "Dumri", "Bengabad"] },
+    { "name": "Godda", "blocks": ["Godda", "Boarijor", "Pathargama"] },
+    { "name": "Gumla", "blocks": ["Gumla", "Sisai", "Palkot"] },
+    { "name": "Hazaribagh", "blocks": ["Hazaribagh", "Katkamdag", "Barkagaon"] },
+    { "name": "Jamtara", "blocks": ["Jamtara", "Nala", "Karmatanr"] },
+    { "name": "Khunti", "blocks": ["Khunti", "Torpa", "Karra"] },
+    { "name": "Koderma", "blocks": ["Koderma", "Domchanch", "Jainagar"] },
+    { "name": "Latehar", "blocks": ["Latehar", "Balumath", "Mahuadanr"] },
+    { "name": "Lohardaga", "blocks": ["Lohardaga", "Kisko", "Senha"] },
+    { "name": "Pakur", "blocks": ["Pakur", "Litipara", "Amrapara"] },
+    { "name": "Palamu", "blocks": ["Medininagar", "Chainpur", "Hussainabad"] },
+    { "name": "Ramgarh", "blocks": ["Ramgarh", "Gola", "Patratu"] },
+    { "name": "Ranchi", "blocks": ["Kanke", "Namkum", "Ormanjhi"] },
+    { "name": "Sahibganj", "blocks": ["Sahibganj", "Barharwa", "Rajmahal"] },
+    { "name": "Seraikela Kharsawan", "blocks": ["Seraikela", "Chandil", "Ichagarh"] },
+    { "name": "Simdega", "blocks": ["Simdega", "Kolebira", "Bano"] },
+    { "name": "West Singhbhum", "blocks": ["Chaibasa", "Jagannathpur", "Noamundi"] }
+  ],
+  "note": "This is a pilot master list for product flow. For production, replace with authoritative LGD/state master and full block coverage."
+}

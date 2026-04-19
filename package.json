@@ -1,0 +1,29 @@
+{
+  "name": "farmassist-jharkhand-pilot",
+  "version": "0.1.0",
+  "description": "Verification-first FarmAssist pilot for Jharkhand (English + Hindi)",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node src/server.js",
+    "validate:data": "node scripts/validateSchemes.js",
+    "check:aadhaar-autofill": "node scripts/checkAadhaarAutofill.js"
+  },
+  "keywords": [
+    "agri",
+    "jharkhand",
+    "schemes",
+    "farmer",
+    "startup"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^4.21.2",
+    "multer": "^2.1.1",
+    "pdf-parse": "^2.4.5",
+    "tesseract.js": "^7.0.0"
+  }
+}
