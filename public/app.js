@@ -103,6 +103,7 @@ const UI_TEXT = {
     labelUploadDocs: 'Upload Documents (Aadhaar and Bank details are auto-extracted from these files)',
     autoFillBtn: 'Auto Fill From Documents',
     scanAadhaarBtn: 'Scan Aadhaar from File',
+    scanRorBtn: 'Scan Land Record (RoR/Khatiyan)',
     openPortalBtn: 'Open Official Portal (Manual Submit)',
     copyPrefillBtn: 'Copy Prefill Details',
     downloadPacketBtn: 'Download Application Packet',
@@ -195,6 +196,7 @@ const UI_TEXT = {
     labelUploadDocs: 'कागज़ात यहाँ जोड़ें (आधार और बैंक की जानकारी इन्हीं से निकाली जाएगी)',
     autoFillBtn: 'दस्तावेज़ों से ऑटो भरें',
     scanAadhaarBtn: 'फ़ाइल से आधार पहचानें',
+    scanRorBtn: 'भूमि रिकॉर्ड स्कैन करें (RoR/खतौनी)',
     openPortalBtn: 'सरकारी वेबसाइट खोलें (जमा खुद करें)',
     copyPrefillBtn: 'भरी हुई जानकारी नकल करें',
     downloadPacketBtn: 'आवेदन सामग्री सहेजें',
@@ -350,6 +352,9 @@ function applyUiLanguage() {
 
   const scanBtn = document.getElementById('scanAadhaarBtn');
   if (scanBtn) scanBtn.textContent = t('scanAadhaarBtn');
+
+  const scanRorBtn = document.getElementById('scanRorBtn');
+  if (scanRorBtn) scanRorBtn.textContent = t('scanRorBtn');
 
   const autoFillBtn = document.getElementById('autoFillBtn');
   if (autoFillBtn) autoFillBtn.textContent = t('autoFillBtn');
@@ -1688,6 +1693,108 @@ async function scanAadhaarFromSelectedFile(fileOverride = null, { allowFallback 
   }
 }
 
+async function scanLandRecordFromSelectedFile() {
+  const files = selectedFiles();
+  if (!files || files.length === 0) {
+    setAdminStatus('Please upload a RoR/Khatiyan document image.', true);
+    return;
+  }
+
+  // Use first uploaded file for RoR extraction
+  const fileToScan = files[0];
+  
+  let fileToSend = fileToScan;
+  let convertedFromPdf = false;
+  if (isPdfFile(fileToScan)) {
+    const converted = await convertPdfFirstPageToPngFile(fileToScan);
+    if (converted) {
+      fileToSend = converted;
+      convertedFromPdf = true;
+    }
+  }
+
+  const formData = new FormData();
+  formData.append('document', fileToSend);
+
+  try {
+    setAdminStatus(
+      convertedFromPdf
+        ? `Scanning ${fileToScan.name} (converted first PDF page to image) for land record details...`
+        : `Scanning ${fileToScan.name} for land record details...`
+    );
+
+    const res = await fetch(`${API_BASE}/api/extract/land-record`, {
+      method: 'POST',
+      body: formData
+    });
+
+    const data = await res.json();
+    if (!res.ok || !data.ok) {
+      throw new Error(data?.error || 'Land record scan failed');
+    }
+
+    const details = data.details || {};
+    const fieldsFound = data.fields_found || 0;
+
+    if (fieldsFound === 0) {
+      setAdminStatus(`Could not detect structured land record format in ${fileToScan.name}. Please verify image quality.`, true);
+      return;
+    }
+
+    // Auto-fill land fields with extracted data
+    if (details.state) {
+      document.getElementById('landState').value = details.state;
+    }
+    if (details.district) {
+      document.getElementById('landDistrict').value = details.district;
+    }
+    if (details.subDistrict) {
+      document.getElementById('landSubDistrict').value = details.subDistrict;
+    }
+    if (details.block) {
+      document.getElementById('landBlock').value = details.block;
+    }
+    if (details.village) {
+      document.getElementById('landVillage').value = details.village;
+    }
+    if (details.surveyNo) {
+      document.getElementById('landSurveyNo').value = details.surveyNo;
+    }
+    if (details.area) {
+      document.getElementById('landArea').value = details.area;
+    }
+    if (details.landOwnerName) {
+      const nameEl = document.getElementById('landApplicantName');
+      if (nameEl && !nameEl.value.trim()) {
+        nameEl.value = details.landOwnerName;
+      }
+    }
+    if (details.holdingType) {
+      const holdingEl = document.getElementById('landHoldingType');
+      if (holdingEl) {
+        holdingEl.value = details.holdingType;
+      }
+    }
+
+    const fieldsFilledList = [];
+    if (details.state) fieldsFilledList.push('State');
+    if (details.district) fieldsFilledList.push('District');
+    if (details.village) fieldsFilledList.push('Village');
+    if (details.surveyNo) fieldsFilledList.push('Survey No');
+    if (details.area) fieldsFilledList.push('Area');
+
+    setAdminStatus(
+      `Land record extracted successfully (${fieldsFound} fields found). ` +
+      `Auto-filled: ${fieldsFilledList.length > 0 ? fieldsFilledList.join(', ') : 'None'}. ` +
+      `Please review and fill remaining fields manually.`
+    );
+    
+    renderDocChecklist();
+  } catch (err) {
+    setAdminStatus(`Land record scan failed: ${err.message}`, true);
+  }
+}
+
 async function fetchSchemes() {
   const payload = buildPayload();
   document.getElementById('results').innerHTML = `<div class="card">${t('loading')}</div>`;
@@ -1957,6 +2064,9 @@ document.getElementById('applicationDocs').addEventListener('change', async () =
 });
 document.getElementById('scanAadhaarBtn').addEventListener('click', () => {
   scanAadhaarFromSelectedFile(null, { allowFallback: true, preserveExisting: true });
+});
+document.getElementById('scanRorBtn').addEventListener('click', () => {
+  scanLandRecordFromSelectedFile();
 });
 document.getElementById('autoFillBtn').addEventListener('click', autoFillFromDocuments);
 document.getElementById('copyPrefillBtn').addEventListener('click', copyPrefillDetails);

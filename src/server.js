@@ -26,6 +26,7 @@ const {
 const { recommend } = require("./engine/recommendation");
 const { extractAadhaarFromBuffer, SUPPORTED_IMAGE_TYPES } = require("./services/aadhaarExtractor");
 const { scanDocumentFromBuffer } = require("./services/documentScanner");
+const { extractLandDetailsFromBuffer } = require("./services/landRecordExtractor");
 
 const app = express();
 const upload = multer({
@@ -137,6 +138,51 @@ app.post("/api/extract/aadhaar", (req, res, next) => {
       ok: false,
       error: message,
       code: err?.code || "AADHAAR_EXTRACTION_FAILED",
+    });
+  }
+});
+
+app.post("/api/extract/land-record", (req, res, next) => {
+  upload.single("document")(req, res, (err) => {
+    if (!err) {
+      next();
+      return;
+    }
+
+    if (err.code === "LIMIT_FILE_SIZE") {
+      res.status(413).json({ ok: false, error: "File too large. Max size is 10 MB." });
+      return;
+    }
+
+    res.status(400).json({ ok: false, error: err.message || "Invalid upload" });
+  });
+}, async (req, res) => {
+  try {
+    if (!req.file || !req.file.buffer) {
+      return res.status(400).json({ ok: false, error: "No document uploaded" });
+    }
+
+    const result = await extractLandDetailsFromBuffer({
+      buffer: req.file.buffer,
+      mimeType: req.file.mimetype,
+      fileName: req.file.originalname,
+    });
+
+    res.json({ ok: true, ...result });
+  } catch (err) {
+    const status = Number(err?.statusCode) || 500;
+    const message = status >= 500
+      ? "Could not extract land details from document"
+      : err.message;
+
+    if (status >= 500) {
+      console.error("Land record extraction error:", err);
+    }
+
+    res.status(status).json({
+      ok: false,
+      error: message,
+      code: err?.code || "LAND_RECORD_EXTRACTION_FAILED",
     });
   }
 });
