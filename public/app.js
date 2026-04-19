@@ -1,6 +1,46 @@
 const API_BASE = window.location.protocol === 'file:' ? 'http://localhost:3010' : '';
 let rejectionReasons = [];
 let activeAdminRole = null;
+const PDFJS_WORKER_SRC = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+function isPdfFile(file) {
+  return Boolean(file && String(file.type || '').toLowerCase().includes('pdf'));
+}
+
+function ensurePdfJsConfigured() {
+  if (!window.pdfjsLib) return false;
+  if (!window.pdfjsLib.GlobalWorkerOptions.workerSrc) {
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER_SRC;
+  }
+  return true;
+}
+
+async function convertPdfFirstPageToPngFile(file) {
+  if (!isPdfFile(file) || !ensurePdfJsConfigured()) return null;
+
+  try {
+    const data = await file.arrayBuffer();
+    const doc = await window.pdfjsLib.getDocument({ data }).promise;
+    const page = await doc.getPage(1);
+    const viewport = page.getViewport({ scale: 2.0 });
+
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.ceil(viewport.width);
+    canvas.height = Math.ceil(viewport.height);
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+
+    await page.render({ canvasContext: ctx, viewport }).promise;
+
+    const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png', 0.95));
+    if (!blob) return null;
+
+    const pngName = String(file.name || 'document.pdf').replace(/\.pdf$/i, '') + '-page1.png';
+    return new File([blob], pngName, { type: 'image/png' });
+  } catch (_err) {
+    return null;
+  }
+}
 
 // ─── UI Translations ──────────────────────────────────────────────────────────
 const UI_TEXT = {
@@ -578,8 +618,18 @@ async function scanSupportingDocuments(filesToScan = selectedFiles()) {
   }
 
   const scanTasks = files.map(async (file) => {
+    let fileToSend = file;
+    let convertedFromPdf = false;
+    if (isPdfFile(file)) {
+      const converted = await convertPdfFirstPageToPngFile(file);
+      if (converted) {
+        fileToSend = converted;
+        convertedFromPdf = true;
+      }
+    }
+
     const formData = new FormData();
-    formData.append('document', file);
+    formData.append('document', fileToSend);
 
     try {
       const res = await fetch(`${API_BASE}/api/extract/document`, {
@@ -594,8 +644,8 @@ async function scanSupportingDocuments(filesToScan = selectedFiles()) {
         fileName: file.name,
         detected_type: data.detected_type || 'unknown',
         confidence: Number(data.confidence || 0),
-        extraction_method: data.extraction_method || 'none',
-        warning: data.warning || '',
+        extraction_method: convertedFromPdf ? `client_pdf_page1_${data.extraction_method || 'none'}` : (data.extraction_method || 'none'),
+        warning: convertedFromPdf ? '' : (data.warning || ''),
         text_preview: data.text_preview || '',
         fields: data.fields || {},
         file
@@ -1405,11 +1455,25 @@ async function scanAadhaarFromSelectedFile(fileOverride = null, { allowFallback 
     return;
   }
 
+  let fileToSend = fileToScan;
+  let convertedFromPdf = false;
+  if (isPdfFile(fileToScan)) {
+    const converted = await convertPdfFirstPageToPngFile(fileToScan);
+    if (converted) {
+      fileToSend = converted;
+      convertedFromPdf = true;
+    }
+  }
+
   const formData = new FormData();
-  formData.append('document', fileToScan);
+  formData.append('document', fileToSend);
 
   try {
-    setAdminStatus(`Scanning ${fileToScan.name} for Aadhaar number...`);
+    setAdminStatus(
+      convertedFromPdf
+        ? `Scanning ${fileToScan.name} (converted first PDF page to image) for Aadhaar number...`
+        : `Scanning ${fileToScan.name} for Aadhaar number...`
+    );
     const res = await fetch(`${API_BASE}/api/extract/aadhaar`, {
       method: 'POST',
       body: formData
