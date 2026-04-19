@@ -76,10 +76,19 @@ function extractDobFromText(text) {
 }
 
 async function extractTextFromImage(buffer) {
-  const worker = await createWorker("eng");
+  let workerError = null;
+  const worker = await createWorker("eng", 1, {
+    errorHandler: (err) => {
+      workerError = err;
+    },
+  });
   try {
     const { data } = await worker.recognize(buffer);
-    return String(data?.text || "");
+    const text = String(data?.text || "");
+    if (workerError && !text.trim()) {
+      throw new Error("Image OCR failed");
+    }
+    return text;
   } finally {
     await worker.terminate().catch(() => {});
   }
@@ -98,22 +107,8 @@ async function extractTextFromPdf(buffer) {
       };
     }
   } catch (_err) {
-    // Fall through to OCR attempt.
-  }
-
-  try {
-    // Render-safe best effort: some environments can OCR PDF buffers directly.
-    const ocrText = await extractTextFromImage(buffer);
-    if (ocrText.trim().length > 0) {
-      return {
-        text: ocrText,
-        extraction_method: "pdf_ocr",
-        warning: "PDF parsing failed. Used OCR fallback.",
-        warning_code: "PDF_PARSE_FAILED",
-      };
-    }
-  } catch (_err) {
-    // No usable OCR result from direct PDF OCR.
+    // Intentionally do not run Tesseract directly on PDF buffers.
+    // On Render/Linux this can throw "Pdf reading is not supported" and crash the process.
   }
 
   return {
