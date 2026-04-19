@@ -105,6 +105,7 @@ const UI_TEXT = {
     scanAadhaarBtn: 'Scan Aadhaar from File',
     scanBankBtn: 'Scan Bank Passbook',
     scanRorBtn: 'Scan Land Record (RoR/Khatiyan)',
+    scanLagaanBtn: 'Scan Tax Receipt (Lagaan/Rasid)',
     openPortalBtn: 'Open Official Portal (Manual Submit)',
     copyPrefillBtn: 'Copy Prefill Details',
     downloadPacketBtn: 'Download Application Packet',
@@ -199,6 +200,7 @@ const UI_TEXT = {
     scanAadhaarBtn: 'फ़ाइल से आधार पहचानें',
     scanBankBtn: 'बैंक पासबुक स्कैन करें',
     scanRorBtn: 'भूमि रिकॉर्ड स्कैन करें (RoR/खतौनी)',
+    scanLagaanBtn: 'टैक्स रसीद स्कैन करें (लगान/रसद)',
     openPortalBtn: 'सरकारी वेबसाइट खोलें (जमा खुद करें)',
     copyPrefillBtn: 'भरी हुई जानकारी नकल करें',
     downloadPacketBtn: 'आवेदन सामग्री सहेजें',
@@ -360,6 +362,9 @@ function applyUiLanguage() {
 
   const scanRorBtn = document.getElementById('scanRorBtn');
   if (scanRorBtn) scanRorBtn.textContent = t('scanRorBtn');
+
+  const scanLagaanBtn = document.getElementById('scanLagaanBtn');
+  if (scanLagaanBtn) scanLagaanBtn.textContent = t('scanLagaanBtn');
 
   const autoFillBtn = document.getElementById('autoFillBtn');
   if (autoFillBtn) autoFillBtn.textContent = t('autoFillBtn');
@@ -1908,6 +1913,93 @@ async function scanBankPassbookFromSelectedFile() {
   }
 }
 
+async function scanTaxReceiptFromSelectedFile() {
+  const files = selectedFiles();
+  if (!files || files.length === 0) {
+    setAdminStatus('Please upload a tax receipt (Lagaan/Rasid) document image.', true);
+    return;
+  }
+
+  // Use first uploaded file for lagaan extraction
+  const fileToScan = files[0];
+  
+  let fileToSend = fileToScan;
+  let convertedFromPdf = false;
+  if (isPdfFile(fileToScan)) {
+    const converted = await convertPdfFirstPageToPngFile(fileToScan);
+    if (converted) {
+      fileToSend = converted;
+      convertedFromPdf = true;
+    }
+  }
+
+  const formData = new FormData();
+  formData.append('document', fileToSend);
+
+  try {
+    setAdminStatus(
+      convertedFromPdf
+        ? `Scanning ${fileToScan.name} (converted first PDF page to image) for tax receipt details...`
+        : `Scanning ${fileToScan.name} for tax receipt details...`
+    );
+
+    const res = await fetch(`${API_BASE}/api/extract/lagaan`, {
+      method: 'POST',
+      body: formData
+    });
+
+    const data = await res.json();
+    if (!res.ok || !data.ok) {
+      throw new Error(data?.error || 'Tax receipt scan failed');
+    }
+
+    const details = data.details || {};
+    const fieldsFound = data.fields_found || 0;
+
+    if (fieldsFound === 0) {
+      setAdminStatus(`Could not detect structured tax receipt format in ${fileToScan.name}. Please verify image quality.`, true);
+      return;
+    }
+
+    // Auto-fill land fields with extracted data
+    if (details.village) {
+      document.getElementById('landVillage').value = details.village;
+    }
+    if (details.khata) {
+      document.getElementById('landKhataNo').value = details.khata;
+    }
+    if (details.surveyNo) {
+      document.getElementById('landSurveyNo').value = details.surveyNo;
+    }
+    if (details.area) {
+      document.getElementById('landArea').value = details.area;
+    }
+    if (details.landOwnerName) {
+      const nameEl = document.getElementById('landApplicantName');
+      if (nameEl && !nameEl.value.trim()) {
+        nameEl.value = details.landOwnerName;
+      }
+    }
+
+    const fieldsFilledList = [];
+    if (details.village) fieldsFilledList.push('Village');
+    if (details.khata) fieldsFilledList.push('Khata #');
+    if (details.surveyNo) fieldsFilledList.push('Survey #');
+    if (details.area) fieldsFilledList.push('Area');
+    if (details.landOwnerName) fieldsFilledList.push('Owner Name');
+
+    setAdminStatus(
+      `Tax receipt extracted successfully (${fieldsFound} fields found). ` +
+      `Auto-filled: ${fieldsFilledList.length > 0 ? fieldsFilledList.join(', ') : 'None'}. ` +
+      `Please review and fill remaining fields manually.`
+    );
+    
+    renderDocChecklist();
+  } catch (err) {
+    setAdminStatus(`Tax receipt scan failed: ${err.message}`, true);
+  }
+}
+
 async function fetchSchemes() {
   const payload = buildPayload();
   document.getElementById('results').innerHTML = `<div class="card">${t('loading')}</div>`;
@@ -2183,6 +2275,9 @@ document.getElementById('scanBankBtn').addEventListener('click', () => {
 });
 document.getElementById('scanRorBtn').addEventListener('click', () => {
   scanLandRecordFromSelectedFile();
+});
+document.getElementById('scanLagaanBtn').addEventListener('click', () => {
+  scanTaxReceiptFromSelectedFile();
 });
 document.getElementById('autoFillBtn').addEventListener('click', autoFillFromDocuments);
 document.getElementById('copyPrefillBtn').addEventListener('click', copyPrefillDetails);
